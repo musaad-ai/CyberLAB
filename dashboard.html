@@ -135,38 +135,8 @@
 
       </div>
 
-      <!-- ── ROW 1: World Map + System Status ── -->
-      <div class="dashboard-row-1 animate-fade-in animate-delay-1">
-
-        <!-- World Map -->
-        <div class="world-map-card card">
-          <div class="card-header">
-            <div class="card-title">🌍 Global Threat Map</div>
-            <div class="live-dot" style="font-size:12px;color:var(--attack-red)">LIVE</div>
-          </div>
-          <div style="position:relative;overflow:hidden;height:260px;" id="map-wrap">
-            <div style="width:100%;height:100%;background: radial-gradient(ellipse at 30% 50%, rgba(0,212,255,0.05) 0%, transparent 60%), radial-gradient(ellipse at 70% 50%, rgba(255,51,102,0.05) 0%, transparent 60%), var(--bg-card); display:flex;align-items:center;justify-content:center;">
-              <!-- Simplified world map using text art -->
-              <div style="font-size:11px;font-family:monospace;color:rgba(0,212,255,0.15);line-height:1.2;user-select:none;white-space:pre;padding:20px">
-....NNN............NNNNN............EEEEE.......AAAA.......
-...NNNNNN........NNNNNNN.......EEEEEEEEE......AAAAAAAA.....
-..NNNNNNNN.....NNNNNNNNN......EEEEEEEEE.....AAAAAAAAAA....
-.NNNNNNNNNN...NNNNNNNNN.....EEEEEE.....SSSSSAAAAAAAAAAA...
-NNNNNNNNNNNN.NNNNNNNNN......EEEE.....SSSSSSSAAAAAAAAAAAA..
-.NNNNNNNNNNN.NNNNNNNNN.....EEEEEEEE.SSSSSSSSSAAAAAAAAAAA..
-..NNNNNNNNNNNNNNNNNNN.....EEEEEEEEEE.SSSSSSSSS.AAAAAAAAAA.
-...NNNNNNNNNNNNNNNNN......EEEEEEEEE...SSSSSSS...AAAAAAAAAA
-....NNNNNNNNNNNNNNN.......EEEEEEEE.....SSSSSS....AAAAAAAAA
-.....NNNNNNNNNNNNN...............SSSSSSSSSS........AAAAAAA.
-......NNNNNNNNNN...............SSSSSSSSSSS.........AAAAAA..
-.......NNNNNNN................SSSSSSSSSSS..........AAAAA...
-........NNNNN.................SSSSSSSSSS...........AAAA....
-.........NNN..................SSSSSSSS.............AAA.....
-..........N...................SSSSSSS..............AA......
-              </div>
-            </div>
-          </div>
-        </div>
+      <!-- ── ROW 1: System Status (full width) ── -->
+      <div class="dashboard-row-1 animate-fade-in animate-delay-1" style="grid-template-columns:1fr">
 
         <!-- System Status -->
         <div class="card">
