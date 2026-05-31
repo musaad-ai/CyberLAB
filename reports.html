@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports — CyberLAB | Attack History & Security Reports</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <style>
+    .reports-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 24px; }
+    .report-kpi { background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:20px; text-align:center; }
+    .report-kpi-val { font-size:32px; font-weight:800; font-family:var(--font-mono); display:block; margin-bottom:4px; }
+    .report-kpi-lbl { font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; }
+
+    .report-actions { display:flex; gap:12px; margin-bottom:24px; flex-wrap:wrap; }
+    .btn-report { display:flex; align-items:center; gap:8px; padding:10px 20px; border-radius:10px; border:1px solid var(--border); background:var(--bg-card); color:var(--text-primary); cursor:pointer; font-size:13px; font-weight:600; transition:all 0.2s; }
+    .btn-report:hover { border-color:var(--cyber-blue); color:var(--cyber-blue); background:rgba(0,212,255,0.06); }
+    .btn-report.primary { background:var(--cyber-blue); color:#000; border-color:var(--cyber-blue); }
+    .btn-report.primary:hover { background:#00b8d9; }
+
+    .history-table { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; overflow:hidden; }
+    .history-head { display:grid; grid-template-columns:40px 140px 100px 120px 100px 100px 1fr; gap:12px; padding:12px 20px; background:var(--bg-surface); border-bottom:1px solid var(--border); font-size:10px; font-family:var(--font-mono); color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; }
+    .history-row { display:grid; grid-template-columns:40px 140px 100px 120px 100px 100px 1fr; gap:12px; padding:12px 20px; border-bottom:1px solid rgba(255,255,255,0.03); align-items:center; font-size:12px; transition:background 0.1s; }
+    .history-row:hover { background:rgba(255,255,255,0.02); }
+    .history-row:last-child { border-bottom:none; }
+
+    .sev-badge { font-size:9px; padding:2px 8px; border-radius:99px; font-family:var(--font-mono); font-weight:700; text-transform:uppercase; }
+    .sev-badge.critical { background:rgba(255,51,102,0.2); color:#ff3366; }
+    .sev-badge.high     { background:rgba(255,107,53,0.2); color:#ff6b35; }
+    .sev-badge.medium   { background:rgba(255,170,0,0.2);  color:#ffaa00; }
+    .sev-badge.low      { background:rgba(0,212,255,0.15); color:#00d4ff; }
+
+    .result-tag { font-size:10px; padding:2px 8px; border-radius:99px; font-family:var(--font-mono); }
+    .result-tag.blocked  { background:rgba(0,255,136,0.15); color:var(--defense-green); }
+    .result-tag.success  { background:rgba(255,51,102,0.15); color:var(--attack-red); }
+
+    /* Certificate */
+    .cert-section { background:var(--bg-card); border:1px solid rgba(124,58,237,0.3); border-radius:16px; overflow:hidden; margin-top:24px; }
+    .cert-header { padding:16px 24px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+    .cert-list { padding:16px; display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; }
+    .cert-card { background:linear-gradient(135deg,rgba(124,58,237,0.1),rgba(0,212,255,0.05)); border:1px solid rgba(124,58,237,0.3); border-radius:12px; padding:20px; position:relative; overflow:hidden; }
+    .cert-card::before { content:'🏅'; position:absolute; right:16px; top:16px; font-size:32px; opacity:0.3; }
+    .cert-name { font-size:14px; font-weight:700; margin-bottom:6px; }
+    .cert-desc { font-size:11px; color:var(--text-muted); margin-bottom:12px; }
+    .cert-locked { opacity:0.4; filter:grayscale(1); }
+    .cert-locked .cert-card::after { content:'🔒'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:32px; background:rgba(0,0,0,0.5); border-radius:12px; }
+
+    @media (max-width:900px) {
+      .reports-grid { grid-template-columns:repeat(2,1fr); }
+      .history-head, .history-row { grid-template-columns:40px 1fr 80px 100px; }
+      .history-head span:nth-child(n+5), .history-row span:nth-child(n+5) { display:none; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🛡️</div>
+      <div class="logo-text"><div class="logo-name">CyberLAB</div><div class="logo-sub">v2.4 · Live</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a class="nav-item" href="dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
+      <a class="nav-item" href="learn.html"><span class="nav-icon">🎓</span> Learning Center</a>
+      <a class="nav-item" href="lab.html"><span class="nav-icon">🧪</span> Simulation Lab</a>
+      <a class="nav-item" href="analytics.html"><span class="nav-icon">📈</span> Analytics</a>
+      <div class="nav-section-label">Advanced</div>
+      <a class="nav-item" href="siem.html"><span class="nav-icon">🔍</span> SIEM Monitor</a>
+      <a class="nav-item active" href="reports.html"><span class="nav-icon">📋</span> Reports</a>
+      <div class="nav-section-label">Tools</div>
+      <a class="nav-item" href="profile.html"><span class="nav-icon">👤</span> My Profile</a>
+      <a class="nav-item" href="future.html"><span class="nav-icon">🚀</span> Future Work</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info" id="logout-btn">
+        <div class="user-avatar" id="nav-user-init">A</div>
+        <div class="user-details">
+          <div class="user-name" id="nav-user-name">Loading...</div>
+          <div class="user-role" id="nav-user-role">USER</div>
+        </div>
+        <div class="user-menu-btn">⏏</div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-title">
+        <h1>📋 Reports & Certificates</h1>
+        <p class="font-mono">Attack History · Security Metrics · Downloadable Reports</p>
+      </div>
+      <div class="topbar-actions">
+        <div class="status-indicator"><div class="status-dot"></div><span class="status-text">SYSTEM ONLINE</span></div>
+      </div>
+    </header>
+
+    <main class="page-content">
+
+      <!-- KPIs -->
+      <div class="reports-grid animate-fade-in">
+        <div class="report-kpi">
+          <span class="report-kpi-val" style="color:var(--attack-red)" id="rpt-total">0</span>
+          <span class="report-kpi-lbl">Total Attacks Simulated</span>
+        </div>
+        <div class="report-kpi">
+          <span class="report-kpi-val" style="color:var(--defense-green)" id="rpt-blocked">0</span>
+          <span class="report-kpi-lbl">Successfully Blocked</span>
+        </div>
+        <div class="report-kpi">
+          <span class="report-kpi-val" style="color:var(--cyber-blue)" id="rpt-rate">0%</span>
+          <span class="report-kpi-lbl">Defense Success Rate</span>
+        </div>
+        <div class="report-kpi">
+          <span class="report-kpi-val" style="color:var(--cyber-purple)" id="rpt-xp">0 XP</span>
+          <span class="report-kpi-lbl">Experience Earned</span>
+        </div>
+        <div class="report-kpi">
+          <span class="report-kpi-val" style="color:var(--warning-orange)" id="rpt-modules">0/8</span>
+          <span class="report-kpi-lbl">Modules Completed</span>
+        </div>
+        <div class="report-kpi">
+          <span class="report-kpi-val" style="color:var(--defense-green)" id="rpt-score">0</span>
+          <span class="report-kpi-lbl">Overall Security Score</span>
+        </div>
+      </div>
+
+      <!-- Download Actions -->
+      <div class="report-actions animate-fade-in animate-delay-1">
+        <button class="btn-report primary" onclick="Reports.downloadCSV()">⬇ Download CSV Report</button>
+        <button class="btn-report" onclick="Reports.printReport()">🖨 Print / Save PDF</button>
+        <button class="btn-report" onclick="Reports.downloadJSON()">📦 Export JSON</button>
+        <button class="btn-report" onclick="Reports.generateFull()">📄 Full Security Report</button>
+      </div>
+
+      <!-- History Table -->
+      <div class="history-table animate-fade-in animate-delay-2">
+        <div class="card-header">
+          <div class="card-title">📜 Attack Simulation History</div>
+          <div style="display:flex;gap:8px">
+            <select id="filter-type" onchange="Reports.filterHistory()" style="background:var(--bg-surface);border:1px solid var(--border);color:var(--text-primary);font-family:var(--font-mono);font-size:11px;padding:4px 8px;border-radius:6px;outline:none">
+              <option value="all">All Types</option>
+              <option value="DDoS">DDoS</option>
+              <option value="SQL">SQL Injection</option>
+              <option value="Brute">Brute Force</option>
+              <option value="MITM">MITM</option>
+              <option value="Ransomware">Ransomware</option>
+              <option value="Phishing">Phishing</option>
+            </select>
+            <select id="filter-result" onchange="Reports.filterHistory()" style="background:var(--bg-surface);border:1px solid var(--border);color:var(--text-primary);font-family:var(--font-mono);font-size:11px;padding:4px 8px;border-radius:6px;outline:none">
+              <option value="all">All Results</option>
+              <option value="blocked">Blocked</option>
+              <option value="success">Succeeded</option>
+            </select>
+          </div>
+        </div>
+        <div class="history-head">
+          <span>#</span>
+          <span>Attack Type</span>
+          <span>Severity</span>
+          <span>Target</span>
+          <span>Defense Used</span>
+          <span>Result</span>
+          <span>Timestamp</span>
+        </div>
+        <div id="history-body"></div>
+      </div>
+
+      <!-- Certificates -->
+      <div class="cert-section animate-fade-in animate-delay-3">
+        <div class="cert-header">
+          <div class="card-title">🏆 Earned Certificates</div>
+          <span class="badge badge-purple" id="cert-count">0 / 6</span>
+        </div>
+        <div class="cert-list" id="cert-list"></div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+<script src="js/utils.js"></script>
+<script src="js/app.js"></script>
+<script src="js/reports.js"></script>
+</body>
+</html>

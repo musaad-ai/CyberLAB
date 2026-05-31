@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIEM Monitor — CyberLAB | Real-Time Security Event Monitoring</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/siem.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🛡️</div>
+      <div class="logo-text"><div class="logo-name">CyberLAB</div><div class="logo-sub">v2.4 · Live</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a class="nav-item" href="dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
+      <a class="nav-item" href="learn.html"><span class="nav-icon">🎓</span> Learning Center</a>
+      <a class="nav-item" href="lab.html"><span class="nav-icon">🧪</span> Simulation Lab</a>
+      <a class="nav-item" href="analytics.html"><span class="nav-icon">📈</span> Analytics</a>
+      <div class="nav-section-label">Advanced</div>
+      <a class="nav-item active" href="siem.html"><span class="nav-icon">🔍</span> SIEM Monitor</a>
+      <a class="nav-item" href="reports.html"><span class="nav-icon">📋</span> Reports</a>
+      <div class="nav-section-label">Tools</div>
+      <a class="nav-item" href="profile.html"><span class="nav-icon">👤</span> My Profile</a>
+      <a class="nav-item" href="future.html"><span class="nav-icon">🚀</span> Future Work</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info" id="logout-btn">
+        <div class="user-avatar" id="nav-user-init">A</div>
+        <div class="user-details">
+          <div class="user-name" id="nav-user-name">Loading...</div>
+          <div class="user-role" id="nav-user-role">USER</div>
+        </div>
+        <div class="user-menu-btn">⏏</div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-title">
+        <h1>🔍 SIEM Live Monitor</h1>
+        <p class="font-mono">Wazuh-Style Security Event & Log Analysis — Real-Time</p>
+      </div>
+      <div class="topbar-actions">
+        <div class="status-indicator">
+          <div class="status-dot"></div>
+          <span class="status-text" id="siem-status">MONITORING</span>
+        </div>
+        <button class="btn btn-ghost btn-sm" id="siem-pause-btn" onclick="SIEM.togglePause()">⏸ Pause</button>
+        <button class="btn btn-ghost btn-sm" onclick="SIEM.clearLogs()">🗑 Clear</button>
+      </div>
+    </header>
+
+    <main class="page-content">
+
+      <!-- Agent Status Row -->
+      <div class="agent-row animate-fade-in">
+        <div class="agent-card" id="agent-kali">
+          <div class="agent-dot active"></div>
+          <div class="agent-info">
+            <div class="agent-name">🐧 Kali Linux</div>
+            <div class="agent-meta">10.0.0.5 · Attacker VM</div>
+          </div>
+          <div class="agent-badge" id="agent-kali-count">0 events</div>
+        </div>
+        <div class="agent-card" id="agent-win">
+          <div class="agent-dot active"></div>
+          <div class="agent-info">
+            <div class="agent-name">🪟 Windows Server</div>
+            <div class="agent-meta">192.168.1.100 · Target</div>
+          </div>
+          <div class="agent-badge" id="agent-win-count">0 events</div>
+        </div>
+        <div class="agent-card" id="agent-linux">
+          <div class="agent-dot active"></div>
+          <div class="agent-info">
+            <div class="agent-name">🐧 Ubuntu 22.04</div>
+            <div class="agent-meta">192.168.1.101 · Target</div>
+          </div>
+          <div class="agent-badge" id="agent-linux-count">0 events</div>
+        </div>
+        <div class="agent-card" id="agent-wazuh">
+          <div class="agent-dot" style="background:var(--cyber-purple);box-shadow:0 0 8px var(--cyber-purple)"></div>
+          <div class="agent-info">
+            <div class="agent-name">🔍 Wazuh Manager</div>
+            <div class="agent-meta">10.0.0.10 · SIEM Core</div>
+          </div>
+          <div class="agent-badge" id="agent-wazuh-count">0 rules</div>
+        </div>
+      </div>
+
+      <!-- Alert Stats -->
+      <div class="alert-stats animate-fade-in animate-delay-1">
+        <div class="alert-stat critical">
+          <div class="alert-stat-num" id="cnt-critical">0</div>
+          <div class="alert-stat-lbl">💀 Critical</div>
+        </div>
+        <div class="alert-stat high">
+          <div class="alert-stat-num" id="cnt-high">0</div>
+          <div class="alert-stat-lbl">🔴 High</div>
+        </div>
+        <div class="alert-stat medium">
+          <div class="alert-stat-num" id="cnt-medium">0</div>
+          <div class="alert-stat-lbl">🟡 Medium</div>
+        </div>
+        <div class="alert-stat low">
+          <div class="alert-stat-num" id="cnt-low">0</div>
+          <div class="alert-stat-lbl">🔵 Low</div>
+        </div>
+        <div class="alert-stat info">
+          <div class="alert-stat-num" id="cnt-total">0</div>
+          <div class="alert-stat-lbl">📊 Total</div>
+        </div>
+      </div>
+
+      <!-- Main SIEM Layout -->
+      <div class="siem-layout animate-fade-in animate-delay-2">
+
+        <!-- Log Stream -->
+        <div class="siem-main">
+          <div class="card" style="height:100%">
+            <div class="card-header">
+              <div class="card-title">
+                <div class="live-dot"></div>
+                Live Security Event Log
+              </div>
+              <div style="display:flex;gap:8px;align-items:center">
+                <select class="siem-filter" id="level-filter" onchange="SIEM.filterLevel(this.value)">
+                  <option value="all">All Levels</option>
+                  <option value="critical">Critical</option>
+                  <option value="high">High</option>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
+                </select>
+                <select class="siem-filter" id="agent-filter" onchange="SIEM.filterAgent(this.value)">
+                  <option value="all">All Agents</option>
+                  <option value="kali">Kali Linux</option>
+                  <option value="windows">Windows Server</option>
+                  <option value="ubuntu">Ubuntu</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Log Table Header -->
+            <div class="log-table-head">
+              <span style="width:70px">Level</span>
+              <span style="width:80px">Time</span>
+              <span style="width:90px">Agent</span>
+              <span style="width:80px">Rule ID</span>
+              <span style="flex:1">Description</span>
+              <span style="width:100px">Source IP</span>
+            </div>
+
+            <div class="log-stream" id="log-stream"></div>
+          </div>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="siem-right">
+
+          <!-- Rule Matches Chart -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">📊 Event Timeline</div>
+              <span class="badge badge-red">Live</span>
+            </div>
+            <div style="padding:12px;height:160px">
+              <canvas id="siem-timeline-chart"></canvas>
+            </div>
+          </div>
+
+          <!-- Top Rules -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">🏆 Top Triggered Rules</div>
+            </div>
+            <div class="top-rules-list" id="top-rules-list"></div>
+          </div>
+
+          <!-- Active Alerts -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">🚨 Active Alerts</div>
+              <span class="badge badge-red" id="active-alert-count">0</span>
+            </div>
+            <div class="active-alerts" id="active-alerts"></div>
+          </div>
+
+          <!-- Attack Correlation -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">🔗 Event Correlation</div>
+              <span class="badge badge-purple">AI Engine</span>
+            </div>
+            <div class="correlation-list" id="correlation-list"></div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+<script src="js/utils.js"></script>
+<script src="js/app.js"></script>
+<script src="js/siem.js"></script>
+</body>
+</html>
