@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — CyberLAB | Cyber Attack Simulation</title>
+  <meta name="description" content="Real-time cyber attack monitoring dashboard — Cyber Attack Simulation Lab">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🛡️</div>
+      <div class="logo-text">
+        <div class="logo-name">CyberLAB</div>
+        <div class="logo-sub">v2.4 · Live</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a class="nav-item active" href="dashboard.html">
+        <span class="nav-icon">📊</span> Dashboard
+        <span class="nav-badge" id="alert-badge">7</span>
+      </a>
+      <a class="nav-item" href="learn.html">
+        <span class="nav-icon">🎓</span> Learning Center
+      </a>
+      <a class="nav-item" href="lab.html">
+        <span class="nav-icon">🧪</span> Simulation Lab
+      </a>
+      <a class="nav-item" href="analytics.html">
+        <span class="nav-icon">📈</span> Analytics
+      </a>
+
+      <div class="nav-section-label">Tools</div>
+      <a class="nav-item" href="profile.html">
+        <span class="nav-icon">👤</span> My Profile
+      </a>
+      <a class="nav-item" href="#" onclick="alert('Reports feature coming soon!')">
+        <span class="nav-icon">📋</span> Reports
+      </a>
+      <a class="nav-item" href="#" onclick="alert('Settings coming soon!')">
+        <span class="nav-icon">⚙️</span> Settings
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-info" id="logout-btn" title="Click to logout">
+        <div class="user-avatar" id="nav-user-init">A</div>
+        <div class="user-details">
+          <div class="user-name" id="nav-user-name">Loading...</div>
+          <div class="user-role" id="nav-user-role">USER</div>
+        </div>
+        <div class="user-menu-btn">⏏</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN CONTENT ── -->
+  <div class="main-content">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-title">
+        <h1>Threat Dashboard</h1>
+        <p class="font-mono" id="topbar-time">00:00:00 — Live Monitoring Active</p>
+      </div>
+      <div class="topbar-actions">
+        <div class="status-indicator">
+          <div class="status-dot"></div>
+          <span class="status-text">SYSTEM ONLINE</span>
+        </div>
+        <button class="topbar-btn" title="Notifications">
+          🔔
+          <div class="alert-dot"></div>
+        </button>
+        <button class="topbar-btn" title="Refresh">🔄</button>
+        <button class="topbar-btn" title="Fullscreen">⛶</button>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <main class="page-content">
+
+      <!-- ── STATS ROW ── -->
+      <div class="stats-grid animate-fade-in">
+
+        <div class="stat-card blue">
+          <div class="stat-icon blue">🌐</div>
+          <div class="stat-value blue" id="stat-total">0</div>
+          <div class="stat-label">Total Attacks</div>
+          <div class="stat-change up">▲ +12% from yesterday</div>
+        </div>
+
+        <div class="stat-card red">
+          <div class="stat-icon red">🚨</div>
+          <div class="stat-value red" id="stat-active">0</div>
+          <div class="stat-label">Active Threats</div>
+          <div class="stat-change up" style="display:flex;align-items:center;gap:6px">
+            <div class="status-dot" style="width:6px;height:6px;border-radius:50%;background:var(--attack-red);animation:blink 1s infinite"></div>
+            Live updating
+          </div>
+        </div>
+
+        <div class="stat-card green">
+          <div class="stat-icon green">🛡️</div>
+          <div class="stat-value green" id="stat-blocked">0</div>
+          <div class="stat-label">Attacks Blocked</div>
+          <div class="stat-change down">▼ 94.2% block rate</div>
+        </div>
+
+        <div class="stat-card orange">
+          <div class="stat-icon orange">📡</div>
+          <div class="stat-value orange font-mono" style="font-size:22px">
+            <span id="stat-rate">0</span><span style="font-size:14px">/s</span>
+          </div>
+          <div class="stat-label">Attack Rate</div>
+          <div class="stat-change up">▲ Monitoring live</div>
+        </div>
+
+        <div class="stat-card purple">
+          <div class="stat-icon purple">📦</div>
+          <div class="stat-value purple" id="stat-packets">0</div>
+          <div class="stat-label">Packets Analyzed</div>
+          <div class="stat-change down">▼ All processed</div>
+        </div>
+
+      </div>
+
+      <!-- ── ROW 1: World Map + System Status ── -->
+      <div class="dashboard-row-1 animate-fade-in animate-delay-1">
+
+        <!-- World Map -->
+        <div class="world-map-card card">
+          <div class="card-header">
+            <div class="card-title">🌍 Global Threat Map</div>
+            <div class="live-dot" style="font-size:12px;color:var(--attack-red)">LIVE</div>
+          </div>
+          <div style="position:relative;overflow:hidden;height:260px;" id="map-wrap">
+            <div style="width:100%;height:100%;background: radial-gradient(ellipse at 30% 50%, rgba(0,212,255,0.05) 0%, transparent 60%), radial-gradient(ellipse at 70% 50%, rgba(255,51,102,0.05) 0%, transparent 60%), var(--bg-card); display:flex;align-items:center;justify-content:center;">
+              <!-- Simplified world map using text art -->
+              <div style="font-size:11px;font-family:monospace;color:rgba(0,212,255,0.15);line-height:1.2;user-select:none;white-space:pre;padding:20px">
+....NNN............NNNNN............EEEEE.......AAAA.......
+...NNNNNN........NNNNNNN.......EEEEEEEEE......AAAAAAAA.....
+..NNNNNNNN.....NNNNNNNNN......EEEEEEEEE.....AAAAAAAAAA....
+.NNNNNNNNNN...NNNNNNNNN.....EEEEEE.....SSSSSAAAAAAAAAAA...
+NNNNNNNNNNNN.NNNNNNNNN......EEEE.....SSSSSSSAAAAAAAAAAAA..
+.NNNNNNNNNNN.NNNNNNNNN.....EEEEEEEE.SSSSSSSSSAAAAAAAAAAA..
+..NNNNNNNNNNNNNNNNNNN.....EEEEEEEEEE.SSSSSSSSS.AAAAAAAAAA.
+...NNNNNNNNNNNNNNNNN......EEEEEEEEE...SSSSSSS...AAAAAAAAAA
+....NNNNNNNNNNNNNNN.......EEEEEEEE.....SSSSSS....AAAAAAAAA
+.....NNNNNNNNNNNNN...............SSSSSSSSSS........AAAAAAA.
+......NNNNNNNNNN...............SSSSSSSSSSS.........AAAAAA..
+.......NNNNNNN................SSSSSSSSSSS..........AAAAA...
+........NNNNN.................SSSSSSSSSS...........AAAA....
+.........NNN..................SSSSSSSS.............AAA.....
+..........N...................SSSSSSS..............AA......
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- System Status -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">⚙️ System Status</div>
+            <span class="badge badge-green">Healthy</span>
+          </div>
+          <div class="system-gauges">
+            <div class="gauge-item">
+              <div class="gauge-header">
+                <span class="gauge-label">🖥️ CPU Usage</span>
+                <span class="gauge-value text-blue" id="gauge-cpu-val">--</span>
+              </div>
+              <div class="gauge-bar"><div class="gauge-fill cpu" id="gauge-cpu" style="width:0%"></div></div>
+            </div>
+            <div class="gauge-item">
+              <div class="gauge-header">
+                <span class="gauge-label">💾 Memory</span>
+                <span class="gauge-value" id="gauge-mem-val">--</span>
+              </div>
+              <div class="gauge-bar"><div class="gauge-fill mem" id="gauge-mem" style="width:0%"></div></div>
+            </div>
+            <div class="gauge-item">
+              <div class="gauge-header">
+                <span class="gauge-label">🌐 Network I/O</span>
+                <span class="gauge-value text-green" id="gauge-net-val">--</span>
+              </div>
+              <div class="gauge-bar"><div class="gauge-fill net" id="gauge-net" style="width:0%"></div></div>
+            </div>
+            <div class="gauge-item">
+              <div class="gauge-header">
+                <span class="gauge-label">💿 Disk</span>
+                <span class="gauge-value" id="gauge-disk-val">--</span>
+              </div>
+              <div class="gauge-bar"><div class="gauge-fill disk" id="gauge-disk" style="width:0%"></div></div>
+            </div>
+          </div>
+
+          <div style="padding:0 24px 20px">
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--bg-surface);border-radius:8px;font-size:12px">
+                <span style="color:var(--text-secondary)">🔥 Firewall</span>
+                <span style="color:var(--defense-green);font-family:var(--font-mono)">ACTIVE</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--bg-surface);border-radius:8px;font-size:12px">
+                <span style="color:var(--text-secondary)">🕵️ IDS/IPS</span>
+                <span style="color:var(--defense-green);font-family:var(--font-mono)">MONITORING</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--bg-surface);border-radius:8px;font-size:12px">
+                <span style="color:var(--text-secondary)">🔐 Wazuh SIEM</span>
+                <span style="color:var(--defense-green);font-family:var(--font-mono)">RUNNING</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--bg-surface);border-radius:8px;font-size:12px">
+                <span style="color:var(--text-secondary)">🧱 WAF</span>
+                <span style="color:var(--warning-orange);font-family:var(--font-mono)">LEARNING</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── ROW 2: Charts ── -->
+      <div class="dashboard-row-2 animate-fade-in animate-delay-2">
+
+        <!-- Attack Types Donut -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🎯 Attack Types Distribution</div>
+            <span class="badge badge-blue">Last 24h</span>
+          </div>
+          <div class="card-body" style="padding:16px">
+            <div class="chart-wrap">
+              <canvas id="donut-chart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Attacks Over Time -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">📉 Attack Timeline</div>
+            <div class="live-dot" style="font-size:12px;color:var(--attack-red)">LIVE</div>
+          </div>
+          <div class="card-body" style="padding:16px">
+            <div class="chart-wrap">
+              <canvas id="line-chart"></canvas>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── ROW 3: Feed + Intel + Alerts ── -->
+      <div class="dashboard-row-3 animate-fade-in animate-delay-3">
+
+        <!-- Left column -->
+        <div style="display:flex;flex-direction:column;gap:24px">
+
+          <!-- Live Attack Feed -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <div class="live-dot"></div>
+                Live Attack Feed
+              </div>
+              <div style="display:flex;gap:8px;align-items:center">
+                <span class="badge badge-red">LIVE</span>
+                <button class="btn btn-ghost btn-sm" onclick="document.getElementById('attack-feed').scrollTop=0">↑ Top</button>
+              </div>
+            </div>
+            <!-- Feed Header -->
+            <div style="display:flex;gap:12px;padding:8px 20px;border-bottom:1px solid var(--border);font-size:10px;font-family:var(--font-mono);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">
+              <span style="width:8px"></span>
+              <span style="min-width:130px">Attack Type</span>
+              <span style="min-width:110px">Source</span>
+              <span style="min-width:110px">Target</span>
+              <span style="margin-left:auto">Status</span>
+              <span style="min-width:50px;text-align:right">Time</span>
+            </div>
+            <div class="feed-container" id="attack-feed"></div>
+          </div>
+
+          <!-- Top Attacks Bar -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">🏆 Top Attack Types</div>
+              <span class="badge badge-gray">This week</span>
+            </div>
+            <div class="top-attacks-list" id="top-attacks-list"></div>
+          </div>
+
+        </div>
+
+        <!-- Right column -->
+        <div style="display:flex;flex-direction:column;gap:24px">
+
+          <!-- Threat Intel -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">📡 Threat Intelligence</div>
+              <span class="badge badge-orange">Updated Now</span>
+            </div>
+            <div class="threat-intel-list" id="threat-intel-list"></div>
+          </div>
+
+          <!-- Recent Alerts -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">⚠️ Recent Alerts</div>
+              <span class="badge badge-red">Live</span>
+            </div>
+            <div class="alerts-list" id="alerts-list"></div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+  </div><!-- /main-content -->
+</div><!-- /app-shell -->
+
+<div id="toast-container" class="toast-container"></div>
+
+<script src="js/utils.js"></script>
+<script src="js/app.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

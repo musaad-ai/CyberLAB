@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile — CyberLAB | Progress & Achievements</title>
+  <meta name="description" content="User profile, XP progression, achievements, and learning history">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/lab.css">
+</head>
+<body>
+<div class="app-shell">
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🛡️</div>
+      <div class="logo-text">
+        <div class="logo-name">CyberLAB</div>
+        <div class="logo-sub">v2.4 · Live</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a class="nav-item" href="dashboard.html"><span class="nav-icon">📊</span> Dashboard <span class="nav-badge">!</span></a>
+      <a class="nav-item" href="learn.html"><span class="nav-icon">🎓</span> Learning Center</a>
+      <a class="nav-item" href="lab.html"><span class="nav-icon">🧪</span> Simulation Lab</a>
+      <a class="nav-item" href="analytics.html"><span class="nav-icon">📈</span> Analytics</a>
+      <div class="nav-section-label">Tools</div>
+      <a class="nav-item active" href="profile.html"><span class="nav-icon">👤</span> My Profile</a>
+      <a class="nav-item" href="#"><span class="nav-icon">📋</span> Reports</a>
+      <a class="nav-item" href="#"><span class="nav-icon">⚙️</span> Settings</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info" id="logout-btn">
+        <div class="user-avatar" id="nav-user-init">A</div>
+        <div class="user-details">
+          <div class="user-name" id="nav-user-name">Loading...</div>
+          <div class="user-role" id="nav-user-role">USER</div>
+        </div>
+        <div class="user-menu-btn">⏏</div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-title">
+        <h1>My Profile</h1>
+        <p class="font-mono">XP Progress · Achievements · Learning Path</p>
+      </div>
+      <div class="topbar-actions">
+        <div class="status-indicator">
+          <div class="status-dot"></div>
+          <span class="status-text">CONNECTED</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+
+      <!-- Profile Header -->
+      <div class="profile-header animate-fade-in">
+        <div class="profile-avatar-wrap">
+          <div class="profile-avatar" id="profile-init">A</div>
+          <div class="profile-level-badge" id="profile-level-badge">1</div>
+        </div>
+        <div class="profile-info">
+          <h2 class="profile-name" id="profile-name">Loading...</h2>
+          <div class="profile-role" id="profile-role">STUDENT</div>
+          <div class="profile-stats-row">
+            <div class="profile-stat">
+              <span class="profile-stat-val" id="profile-xp">0</span>
+              <span class="profile-stat-lbl">Total XP</span>
+            </div>
+            <div class="profile-stat">
+              <span class="profile-stat-val" id="profile-modules">0</span>
+              <span class="profile-stat-lbl">Modules Done</span>
+            </div>
+            <div class="profile-stat">
+              <span class="profile-stat-val" id="profile-rank">Beginner</span>
+              <span class="profile-stat-lbl">Rank</span>
+            </div>
+            <div class="profile-stat">
+              <span class="profile-stat-val" id="profile-join">--</span>
+              <span class="profile-stat-lbl">Member Since</span>
+            </div>
+          </div>
+        </div>
+        <div class="xp-section" style="min-width:260px">
+          <div><div style="font-size:28px;margin-bottom:4px">⚡</div></div>
+          <div class="xp-bar-wrap">
+            <div class="xp-labels">
+              <span class="xp-label" id="xp-current">0 XP</span>
+              <span class="xp-label" id="xp-max">250 XP (Level 2)</span>
+            </div>
+            <div class="xp-bar">
+              <div class="xp-fill" id="profile-xp-bar" style="width:0%"></div>
+            </div>
+            <div style="text-align:right;font-size:11px;color:var(--text-muted);margin-top:4px;font-family:var(--font-mono)" id="profile-level">Level 1</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="grid grid-4 mb-6 animate-fade-in animate-delay-1">
+        <div class="stat-card blue">
+          <div class="stat-icon blue">🎯</div>
+          <div class="stat-value blue">--</div>
+          <div class="stat-label">Quiz Score Avg</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-icon green">⏱️</div>
+          <div class="stat-value green">--</div>
+          <div class="stat-label">Study Time</div>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-icon purple">🧪</div>
+          <div class="stat-value purple">--</div>
+          <div class="stat-label">Lab Simulations</div>
+        </div>
+        <div class="stat-card orange">
+          <div class="stat-icon orange">🏆</div>
+          <div class="stat-value orange" id="stat-badges-count">0</div>
+          <div class="stat-label">Badges Earned</div>
+        </div>
+      </div>
+
+      <!-- Badges + Learning Path -->
+      <div class="grid grid-2 animate-fade-in animate-delay-2">
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🏆 Achievements & Badges</div>
+            <span class="badge badge-orange">Collectibles</span>
+          </div>
+          <div class="badges-grid" id="badges-grid"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🗺️ Learning Path Progress</div>
+            <span class="badge badge-blue">4 Levels</span>
+          </div>
+          <div style="padding:20px 24px" id="learning-path-content"></div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script src="js/utils.js"></script>
+<script src="js/app.js"></script>
+<script src="js/lab.js"></script>
+<script>
+// Build learning path after DOM
+document.addEventListener('DOMContentLoaded', () => {
+  const pathData = [
+    { level: 'Beginner',     ar: 'مبتدئ', color: '#00ff88', icon: '🌱', total: 3, ids: ['b1','b2','b3'] },
+    { level: 'Intermediate', ar: 'متوسط', color: '#00d4ff', icon: '⚡', total: 2, ids: ['i1','i2'] },
+    { level: 'Advanced',     ar: 'قوي',   color: '#ffaa00', icon: '🔥', total: 1, ids: ['a1'] },
+    { level: 'Expert',       ar: 'خبير',  color: '#ff3366', icon: '💀', total: 1, ids: ['e1'] },
+  ];
+
+  const progress = Utils.storage.get('progress', {});
+  const container = document.getElementById('learning-path-content');
+  if (!container) return;
+
+  let html = '<div style="display:flex;flex-direction:column;gap:20px">';
+  pathData.forEach((l, i) => {
+    const done = l.ids.filter(id => progress[id]).length;
+    const pct  = Math.round((done / l.total) * 100);
+    html += `
+      <div style="display:flex;gap:16px;align-items:flex-start">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+          <div style="width:44px;height:44px;border-radius:12px;background:${l.color}22;border:2px solid ${l.color}44;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">${l.icon}</div>
+          ${i < 3 ? '<div style="width:2px;height:20px;background:var(--border);border-radius:1px"></div>' : ''}
+        </div>
+        <div style="flex:1;padding-top:8px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div>
+              <span style="font-size:15px;font-weight:700">${l.level}</span>
+              <span style="font-size:13px;color:${l.color};margin-left:8px;font-family:var(--font-mono)">${l.ar}</span>
+            </div>
+            <span style="font-size:12px;font-family:var(--font-mono);color:var(--text-muted)">${done}/${l.total} · ${pct}%</span>
+          </div>
+          <div style="height:5px;background:var(--bg-surface);border-radius:99px;overflow:hidden">
+            <div style="height:100%;width:${pct}%;background:${l.color};border-radius:99px;transition:width 1s ease"></div>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  html += '</div>';
+  container.innerHTML = html;
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CyberLAB — Cyber Attack Simulation Platform | ALMAAREEFA University</title>
+  <meta name="description" content="A professional cybersecurity simulation lab for educational purposes — ALMAAREEFA University Graduation Project 2024-2025">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+  <div class="auth-page">
+
+    <!-- Matrix Canvas Background -->
+    <canvas id="matrix-canvas"></canvas>
+
+    <!-- LEFT PANEL -->
+    <div class="auth-left">
+      <div class="auth-brand">
+
+        <div class="auth-logo-wrap">🛡️</div>
+
+        <h1 class="auth-tagline">
+          <span class="highlight-red">Attack</span>.<br>
+          <span class="highlight-blue">Detect</span>.<br>
+          <span class="highlight-green">Defend.</span>
+        </h1>
+
+        <p class="auth-desc">
+          A professional cybersecurity simulation lab for students and researchers.
+          Practice real attack scenarios in a completely safe, isolated environment.
+        </p>
+
+        <!-- Live Stats -->
+        <div class="threat-stats">
+          <div class="threat-stat-item">
+            <span class="threat-stat-num" id="stat-attacks">0</span>
+            <span class="threat-stat-label">Attacks/Day</span>
+          </div>
+          <div class="threat-stat-item">
+            <span class="threat-stat-num" id="stat-countries">0</span>
+            <span class="threat-stat-label">Countries</span>
+          </div>
+          <div class="threat-stat-item">
+            <span class="threat-stat-num" id="stat-blocked">0</span>
+            <span class="threat-stat-label">Blocked</span>
+          </div>
+        </div>
+
+        <!-- Live Ticker -->
+        <div class="attack-ticker">
+          <div class="ticker-label">
+            <div class="live-dot"></div>
+            <span>Live Global Threat Feed</span>
+          </div>
+          <div id="ticker-list"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL (Auth Forms) -->
+    <div class="auth-right">
+
+      <!-- Tabs -->
+      <div class="auth-tabs">
+        <div class="auth-tab active" data-tab="login" id="tab-login">Sign In</div>
+        <div class="auth-tab" data-tab="register" id="tab-register">Register</div>
+      </div>
+
+      <!-- ── LOGIN FORM ── -->
+      <form class="auth-form visible" id="login-form" autocomplete="off">
+
+        <div class="auth-header">
+          <h2>Welcome Back</h2>
+          <p>Sign in to access the Cyber Attack Simulation Lab</p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="login-email">Email Address</label>
+          <div class="form-input-wrap">
+            <span class="form-input-icon">✉️</span>
+            <input class="form-input" type="email" id="login-email"
+              placeholder="your@email.com" value="admin@cyberlab.com" autocomplete="email">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="login-pass">Password</label>
+          <div class="form-input-wrap">
+            <span class="form-input-icon">🔑</span>
+            <input class="form-input" type="password" id="login-pass"
+              placeholder="Enter your password" value="password123" autocomplete="current-password">
+            <span class="form-input-action" data-toggle="password" data-target="login-pass" title="Show/Hide">👁️</span>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end">
+          <a style="font-size:12px;color:var(--cyber-blue);cursor:pointer">Forgot password?</a>
+        </div>
+
+        <button class="btn-auth" type="submit" id="login-btn">
+          🔐 Access System
+        </button>
+
+        <div class="auth-footer">
+          Don't have an account?
+          <a onclick="document.getElementById('tab-register').click()">Create one →</a>
+        </div>
+
+        <div class="auth-footer" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
+          <span style="color:var(--text-muted);font-size:11px">Demo: admin@cyberlab.com / password123</span>
+        </div>
+
+      </form>
+
+      <!-- ── REGISTER FORM ── -->
+      <form class="auth-form" id="register-form" autocomplete="off">
+
+        <div class="auth-header">
+          <h2>Join CyberLAB</h2>
+          <p>Create your account and start learning cybersecurity</p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-name">Full Name</label>
+          <div class="form-input-wrap">
+            <span class="form-input-icon">👤</span>
+            <input class="form-input" type="text" id="reg-name" placeholder="Your full name">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-email">Email Address</label>
+          <div class="form-input-wrap">
+            <span class="form-input-icon">✉️</span>
+            <input class="form-input" type="email" id="reg-email" placeholder="your@email.com">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-pass">Password</label>
+          <div class="form-input-wrap">
+            <span class="form-input-icon">🔑</span>
+            <input class="form-input" type="password" id="reg-pass" placeholder="Create a strong password">
+            <span class="form-input-action" data-toggle="password" data-target="reg-pass" title="Show/Hide">👁️</span>
+          </div>
+          <div class="password-strength">
+            <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+            <span class="strength-label" id="strength-label"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-pass2">Confirm Password</label>
+          <div class="form-input-wrap">
+            <span class="form-input-icon">🔒</span>
+            <input class="form-input" type="password" id="reg-pass2" placeholder="Confirm your password">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Select Your Role</label>
+          <div class="role-selector">
+            <div class="role-option selected" data-role="student">
+              <span class="role-icon">🎓</span>
+              <div class="role-name">Student</div>
+            </div>
+            <div class="role-option" data-role="researcher">
+              <span class="role-icon">🔬</span>
+              <div class="role-name">Researcher</div>
+            </div>
+            <div class="role-option" data-role="admin">
+              <span class="role-icon">⚙️</span>
+              <div class="role-name">Admin</div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-auth" type="submit" id="register-btn">
+          🚀 Create Account
+        </button>
+
+        <div class="auth-footer">
+          Already have an account?
+          <a onclick="document.getElementById('tab-login').click()">Sign in →</a>
+        </div>
+
+      </form>
+
+      <!-- University Badge -->
+      <div class="university-badge">
+        <div class="uni-icon">🏫</div>
+        <div class="uni-text">
+          <strong>ALMAAREEFA University — Graduation Project 2024-2025</strong>
+          Department of Computer Science and Information Systems<br>
+          Supervisor: DR. ISMAIL MOHAMMED KESHTA
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learning Center — CyberLAB | Cyber Attack Simulation</title>
+  <meta name="description" content="Learn cybersecurity with 4 difficulty levels — Beginner, Intermediate, Advanced, Expert">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/learn.css">
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🛡️</div>
+      <div class="logo-text">
+        <div class="logo-name">CyberLAB</div>
+        <div class="logo-sub">v2.4 · Live</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a class="nav-item" href="dashboard.html"><span class="nav-icon">📊</span> Dashboard <span class="nav-badge" id="alert-badge">!</span></a>
+      <a class="nav-item active" href="learn.html"><span class="nav-icon">🎓</span> Learning Center</a>
+      <a class="nav-item" href="lab.html"><span class="nav-icon">🧪</span> Simulation Lab</a>
+      <a class="nav-item" href="analytics.html"><span class="nav-icon">📈</span> Analytics</a>
+      <div class="nav-section-label">Tools</div>
+      <a class="nav-item" href="profile.html"><span class="nav-icon">👤</span> My Profile</a>
+      <a class="nav-item" href="#"><span class="nav-icon">📋</span> Reports</a>
+      <a class="nav-item" href="#"><span class="nav-icon">⚙️</span> Settings</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info" id="logout-btn">
+        <div class="user-avatar" id="nav-user-init">A</div>
+        <div class="user-details">
+          <div class="user-name" id="nav-user-name">Loading...</div>
+          <div class="user-role" id="nav-user-role">USER</div>
+        </div>
+        <div class="user-menu-btn">⏏</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-title">
+        <h1>Learning Center</h1>
+        <p class="font-mono">4 Difficulty Levels · Interactive Modules · XP System</p>
+      </div>
+      <div class="topbar-actions">
+        <div class="status-indicator">
+          <div class="status-dot"></div>
+          <span class="status-text">SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+
+      <!-- ── LEVEL CARDS ── -->
+      <div class="levels-overview">
+
+        <!-- Beginner -->
+        <div class="level-card beginner active" id="level-card-beginner">
+          <div class="level-icon-wrap">🌱</div>
+          <div class="level-num">Level 01</div>
+          <div class="level-name">Beginner</div>
+          <div class="level-ar-name" style="color:var(--defense-green)">مبتدئ</div>
+          <div class="level-desc">Start your cybersecurity journey. Learn fundamental concepts, basic threats, and essential protective measures.</div>
+          <div class="level-progress-info">
+            <span>Progress</span>
+            <span class="level-pct">0%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill level-progress-fill" style="width:0%"></div>
+          </div>
+          <div class="level-modules-count">0/3 modules completed</div>
+        </div>
+
+        <!-- Intermediate -->
+        <div class="level-card intermediate" id="level-card-intermediate">
+          <div class="level-icon-wrap">⚡</div>
+          <div class="level-num">Level 02</div>
+          <div class="level-name">Intermediate</div>
+          <div class="level-ar-name" style="color:var(--cyber-blue)">متوسط</div>
+          <div class="level-desc">Dive into hands-on attack techniques. Network scanning, SQL injection, and exploitation fundamentals.</div>
+          <div class="level-progress-info">
+            <span>Progress</span>
+            <span class="level-pct">0%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill level-progress-fill" style="width:0%;background:linear-gradient(90deg,var(--cyber-blue),var(--cyber-purple))"></div>
+          </div>
+          <div class="level-modules-count">0/2 modules completed</div>
+        </div>
+
+        <!-- Advanced -->
+        <div class="level-card advanced" id="level-card-advanced">
+          <div class="level-icon-wrap">🔥</div>
+          <div class="level-num">Level 03</div>
+          <div class="level-name">Advanced</div>
+          <div class="level-ar-name" style="color:var(--warning-orange)">قوي</div>
+          <div class="level-desc">Master exploitation frameworks like Metasploit. Post-exploitation, privilege escalation, and advanced attacks.</div>
+          <div class="level-progress-info">
+            <span>Progress</span>
+            <span class="level-pct">0%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill level-progress-fill" style="width:0%;background:linear-gradient(90deg,var(--warning-orange),var(--attack-red))"></div>
+          </div>
+          <div class="level-modules-count">0/1 modules completed</div>
+        </div>
+
+        <!-- Expert -->
+        <div class="level-card expert" id="level-card-expert">
+          <div class="level-icon-wrap">💀</div>
+          <div class="level-num">Level 04</div>
+          <div class="level-name">Expert</div>
+          <div class="level-ar-name" style="color:var(--attack-red)">خبير</div>
+          <div class="level-desc">APT attack lifecycles, nation-state tactics, red team operations, and advanced threat hunting techniques.</div>
+          <div class="level-progress-info">
+            <span>Progress</span>
+            <span class="level-pct">0%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill level-progress-fill" style="width:0%;background:linear-gradient(90deg,var(--attack-red),#880022)"></div>
+          </div>
+          <div class="level-modules-count">0/1 modules completed</div>
+        </div>
+
+      </div>
+
+      <!-- ── LEARN CONTENT ── -->
+      <div class="learn-content">
+
+        <!-- Module List Sidebar -->
+        <div class="module-sidebar">
+          <div class="module-sidebar-header">
+            <span class="card-title">📚 Modules</span>
+            <span class="badge badge-green" id="sidebar-level-badge">Beginner</span>
+          </div>
+          <div class="module-list" id="module-list">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Module Viewer -->
+        <div class="module-viewer">
+
+          <!-- Module Header -->
+          <div class="module-viewer-header">
+            <div class="module-breadcrumb" id="module-breadcrumb">
+              Beginner <span>›</span> Theory
+            </div>
+            <h2 class="module-viewer-title" id="module-title">What is Cybersecurity?</h2>
+            <div class="module-meta" id="module-meta">
+              <span class="module-meta-item">⏱ 8 min</span>
+              <span class="module-meta-item">⚡ +50 XP</span>
+              <span class="module-meta-item">📂 Theory</span>
+            </div>
+          </div>
+
+          <!-- Content Tabs -->
+          <div class="content-tabs">
+            <div class="content-tab active" data-tab="theory" onclick="LearnPage.switchTab('theory')">
+              📖 Theory
+            </div>
+            <div class="content-tab" data-tab="demo" onclick="LearnPage.switchTab('demo')">
+              💻 Demo
+            </div>
+            <div class="content-tab" data-tab="defense" onclick="LearnPage.switchTab('defense')">
+              🛡️ Defense
+            </div>
+            <div class="content-tab" data-tab="quiz" onclick="LearnPage.switchTab('quiz')">
+              🧠 Quiz
+            </div>
+          </div>
+
+          <!-- Content Panels -->
+          <div class="content-panel active" id="panel-theory">
+            <!-- Populated by JS -->
+          </div>
+
+          <div class="content-panel" id="panel-demo">
+            <!-- Populated by JS -->
+          </div>
+
+          <div class="content-panel" id="panel-defense">
+            <!-- Populated by JS -->
+          </div>
+
+          <div class="content-panel" id="panel-quiz">
+            <!-- Populated by JS -->
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script src="js/utils.js"></script>
+<script src="js/app.js"></script>
+<script src="js/learn.js"></script>
+</body>
+</html>
