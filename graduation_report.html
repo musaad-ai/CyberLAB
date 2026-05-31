@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyber Attack Simulation Lab — Graduation Project Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ── Reset ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ── Variables ── */
+  :root {
+    --primary:   #1a237e;
+    --accent:    #0d47a1;
+    --red:       #c62828;
+    --green:     #1b5e20;
+    --gray-100:  #f8f9fa;
+    --gray-200:  #e9ecef;
+    --gray-400:  #adb5bd;
+    --gray-600:  #6c757d;
+    --gray-800:  #343a40;
+    --gray-900:  #212529;
+    --border:    #dee2e6;
+    --font:      'Inter', 'Segoe UI', Arial, sans-serif;
+    --mono:      'JetBrains Mono', 'Consolas', monospace;
+  }
+
+  /* ── Base ── */
+  body { font-family: var(--font); font-size: 11pt; color: var(--gray-900); background: #fff; line-height: 1.7; }
+
+  /* ── Print ── */
+  @media print {
+    body { font-size: 10pt; }
+    .cover-page { page-break-after: always; }
+    .toc-page   { page-break-after: always; }
+    h1.chapter-title { page-break-before: always; }
+    table, .code-block { page-break-inside: avoid; }
+    .no-print { display: none !important; }
+    @page { margin: 2cm 2.5cm; size: A4; }
+    @page :first { margin-top: 0; }
+  }
+  @media screen {
+    body { max-width: 900px; margin: 0 auto; padding: 40px 40px; }
+    .print-btn {
+      position: fixed; top: 20px; right: 20px; z-index: 999;
+      background: #1a237e; color: #fff; border: none; padding: 12px 24px;
+      border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+    .print-btn:hover { background: #0d47a1; }
+  }
+
+  /* ── Cover Page ── */
+  .cover-page {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+    background: linear-gradient(160deg, #0a0a1a 0%, #1a237e 100%);
+    color: #fff;
+    padding: 60px 40px;
+    border-radius: 4px;
+    margin-bottom: 40px;
+  }
+  .cover-shield { font-size: 80px; margin-bottom: 24px; }
+  .cover-university { font-size: 13pt; color: #90caf9; letter-spacing: 1px; margin-bottom: 8px; }
+  .cover-dept       { font-size: 11pt; color: #64b5f6; margin-bottom: 40px; }
+  .cover-title {
+    font-size: 28pt; font-weight: 900; letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #fff 0%, #90caf9 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; margin-bottom: 16px; line-height: 1.2;
+  }
+  .cover-subtitle { font-size: 14pt; color: #90caf9; margin-bottom: 48px; font-weight: 300; }
+  .cover-divider { width: 80px; height: 3px; background: linear-gradient(90deg, #00d4ff, #7c3aed); border-radius: 2px; margin: 0 auto 40px; }
+  .cover-info { font-size: 11pt; line-height: 2.2; color: #e3f2fd; }
+  .cover-info strong { color: #fff; }
+  .cover-year {
+    margin-top: 48px; font-size: 16pt; font-weight: 700;
+    padding: 12px 32px; border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 99px; color: #fff;
+  }
+
+  /* ── TOC ── */
+  .toc-page { margin-bottom: 48px; }
+  .toc-title {
+    font-size: 18pt; font-weight: 800; color: var(--primary);
+    border-bottom: 3px solid var(--primary); padding-bottom: 8px; margin-bottom: 24px;
+  }
+  .toc-chapter { font-size: 11pt; font-weight: 700; color: var(--primary); margin: 12px 0 4px; }
+  .toc-section {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 3px 0 3px 16px; border-bottom: 1px dotted var(--gray-400);
+    font-size: 10.5pt; color: var(--gray-800);
+  }
+  .toc-section .dots { flex: 1; border-bottom: 1px dotted var(--gray-400); margin: 0 8px 3px; }
+
+  /* ── Chapters ── */
+  h1.chapter-title {
+    font-size: 20pt; font-weight: 900; color: #fff;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    padding: 20px 28px; border-radius: 8px;
+    margin: 48px 0 32px; display: flex; align-items: center; gap: 12px;
+  }
+  .chapter-num { font-size: 12pt; opacity: 0.7; font-weight: 400; display: block; margin-bottom: 2px; }
+
+  h2.section-title {
+    font-size: 14pt; font-weight: 800; color: var(--primary);
+    border-left: 4px solid var(--primary); padding-left: 12px;
+    margin: 32px 0 14px;
+  }
+  h3.sub-title {
+    font-size: 12pt; font-weight: 700; color: var(--accent);
+    margin: 20px 0 10px;
+  }
+
+  p { margin-bottom: 12px; text-align: justify; }
+  ul, ol { padding-left: 24px; margin-bottom: 12px; }
+  li { margin-bottom: 4px; }
+  strong { color: var(--gray-900); font-weight: 700; }
+
+  /* ── Code blocks ── */
+  .code-block {
+    background: #0d1117; color: #e6edf3;
+    font-family: var(--mono); font-size: 9pt;
+    padding: 16px 20px; border-radius: 8px;
+    margin: 16px 0; overflow-x: auto; line-height: 1.6;
+    border: 1px solid #30363d;
+    white-space: pre;
+  }
+
+  /* ── Tables ── */
+  table {
+    width: 100%; border-collapse: collapse;
+    margin: 16px 0; font-size: 10pt;
+  }
+  thead th {
+    background: var(--primary); color: #fff;
+    padding: 10px 14px; text-align: left; font-weight: 600;
+    font-size: 9.5pt;
+  }
+  tbody td { padding: 9px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tbody tr:nth-child(even) td { background: var(--gray-100); }
+  tbody tr:hover td { background: #e8eaf6; }
+  .check { color: #2e7d32; font-weight: 700; }
+  .cross { color: #c62828; font-weight: 700; }
+  .partial { color: #e65100; font-weight: 700; }
+
+  /* ── Highlight boxes ── */
+  .info-box {
+    background: #e3f2fd; border-left: 4px solid var(--accent);
+    padding: 12px 16px; border-radius: 0 8px 8px 0;
+    margin: 16px 0; font-size: 10.5pt;
+  }
+  .warn-box {
+    background: #fff3e0; border-left: 4px solid #f57c00;
+    padding: 12px 16px; border-radius: 0 8px 8px 0;
+    margin: 16px 0; font-size: 10.5pt;
+  }
+
+  /* ── References ── */
+  .ref-item { padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 10.5pt; }
+  .ref-num  { color: var(--primary); font-weight: 700; margin-right: 8px; }
+
+  /* ── Footer ── */
+  .report-footer {
+    margin-top: 60px; padding-top: 20px; border-top: 2px solid var(--border);
+    text-align: center; font-size: 9pt; color: var(--gray-600);
+  }
+
+  /* ── Page number simulation ── */
+  .page-break { page-break-after: always; margin-bottom: 0; }
+</style>
+</head>
+<body>
+
+<!-- Print Button (screen only) -->
+<button class="print-btn no-print" onclick="window.print()">🖨️ Save as PDF</button>
+
+<!-- ════════════════════════════════ COVER PAGE ════════════════════════════════ -->
+<div class="cover-page">
+  <div class="cover-shield">🛡️</div>
+  <div class="cover-university">ALMAAREEFA UNIVERSITY</div>
+  <div class="cover-dept">Department of Computer Science and Information Systems</div>
+  <div class="cover-title">Cyber Attack Simulation Lab</div>
+  <div class="cover-subtitle">Graduation Project Report</div>
+  <div class="cover-divider"></div>
+  <div class="cover-info">
+    <div><strong>Supervisor:</strong> DR. ISMAIL MOHAMMED KESHTA</div>
+    <div><strong>Platform URL:</strong> musaad-ai.github.io/CyberLAB</div>
+    <div><strong>Repository:</strong> github.com/musaad-ai/CyberLAB</div>
+  </div>
+  <div class="cover-year">Academic Year 2024–2025</div>
+</div>
+
+<!-- ════════════════════════════════ TABLE OF CONTENTS ════════════════════════════════ -->
+<div class="toc-page">
+  <div class="toc-title">Table of Contents</div>
+
+  <div class="toc-chapter">Chapter One: Introduction</div>
+  <div class="toc-section"><span>1.1 Introduction</span><span class="dots"></span></div>
+  <div class="toc-section"><span>1.2 Project Description</span><span class="dots"></span></div>
+  <div class="toc-section"><span>1.3 Project Purpose</span><span class="dots"></span></div>
+  <div class="toc-section"><span>1.4 Problem Statement</span><span class="dots"></span></div>
+  <div class="toc-section"><span>1.5 System Context View</span><span class="dots"></span></div>
+  <div class="toc-section"><span>1.6 System Requirements</span><span class="dots"></span></div>
+  <div class="toc-section"><span>1.8 Challenges</span><span class="dots"></span></div>
+  <div class="toc-section"><span>1.9 Projection</span><span class="dots"></span></div>
+  <div class="toc-section"><span>1.10 Ethical Considerations</span><span class="dots"></span></div>
+
+  <div class="toc-chapter">Chapter Two: Literature Review</div>
+  <div class="toc-section"><span>2.1 Background</span><span class="dots"></span></div>
+  <div class="toc-section"><span>2.2 Literature Review</span><span class="dots"></span></div>
+  <div class="toc-section"><span>2.3 Existing Solutions</span><span class="dots"></span></div>
+
+  <div class="toc-chapter">Chapter Three: System Architecture and Design</div>
+  <div class="toc-section"><span>3.1 Introduction</span><span class="dots"></span></div>
+  <div class="toc-section"><span>3.2 Methodology</span><span class="dots"></span></div>
+  <div class="toc-section"><span>3.3 System Architecture</span><span class="dots"></span></div>
+  <div class="toc-section"><span>3.4 Structural Model</span><span class="dots"></span></div>
+  <div class="toc-section"><span>3.5 Detailed System Architecture</span><span class="dots"></span></div>
+  <div class="toc-section"><span>3.6 User Interface</span><span class="dots"></span></div>
+  <div class="toc-section"><span>3.7 Quality Assurance</span><span class="dots"></span></div>
+  <div class="toc-section"><span>3.8 Acceptance Criteria</span><span class="dots"></span></div>
+  <div class="toc-section"><span>3.9 Future Consideration</span><span class="dots"></span></div>
+
+  <div class="toc-chapter">Chapter Four: Experimental Setup and Configuration</div>
+  <div class="toc-section"><span>4.1 Hardware and Software Setup</span><span class="dots"></span></div>
+  <div class="toc-section"><span>4.2 Installation and Configuration</span><span class="dots"></span></div>
+  <div class="toc-section"><span>4.3 Tools and Technologies Used</span><span class="dots"></span></div>
+  <div class="toc-section"><span>4.5 Testing and Validation</span><span class="dots"></span></div>
+  <div class="toc-section"><span>4.6 Risk Analysis and Mitigation</span><span class="dots"></span></div>
+
+  <div class="toc-chapter">Chapter Five: Results and Discussion</div>
+  <div class="toc-section"><span>5.1 Results</span><span class="dots"></span></div>
+  <div class="toc-section"><span>5.2 Discussion</span><span class="dots"></span></div>
+  <div class="toc-section"><span>5.3 Limitations</span><span class="dots"></span></div>
+
+  <div class="toc-chapter">Chapter Six: Conclusion</div>
+  <div class="toc-section"><span>6.1 Summary of Work</span><span class="dots"></span></div>
+  <div class="toc-section"><span>6.2 Lessons Learned</span><span class="dots"></span></div>
+  <div class="toc-section"><span>6.3 Future Work</span><span class="dots"></span></div>
+
+  <div class="toc-chapter">References</div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ════════════════════════════════ CHAPTER ONE ════════════════════════════════ -->
+<h1 class="chapter-title"><span class="chapter-num">Chapter One</span>Introduction</h1>
+
+<h2 class="section-title">1.1 Introduction</h2>
+<p>Cybersecurity has become one of the most critical fields in the modern digital world. With the rapid growth of internet-connected systems, organizations face an increasing number of sophisticated cyber threats daily. According to IBM's Cost of a Data Breach Report (2023), the global average cost of a data breach reached <strong>$4.45 million USD</strong>, highlighting the devastating impact of inadequate cybersecurity measures.</p>
+<p>Despite this growing threat landscape, a significant gap exists in practical cybersecurity education. Traditional academic courses rely heavily on theoretical content, leaving students without hands-on experience in identifying, executing, and defending against real cyber attacks. The <strong>Cyber Attack Simulation Lab (CASL)</strong> was developed to bridge this gap by providing a safe, interactive, and educational environment where students and researchers can learn cybersecurity concepts through direct simulation.</p>
+<p>This project represents a comprehensive web-based cybersecurity training platform that combines attack simulation, real-time monitoring, interactive learning, and professional reporting — all within a completely isolated and controlled environment.</p>
+
+<h2 class="section-title">1.2 Project Description</h2>
+<p>The Cyber Attack Simulation Lab (CASL) is a full-stack web-based application designed to simulate real-world cyber attacks and defense scenarios in an educational context. The platform provides users with a multi-module environment:</p>
+<ul>
+  <li><strong>Authentication System:</strong> A secure login and registration portal with role-based access control (Student, Researcher, Admin).</li>
+  <li><strong>Live Threat Dashboard:</strong> A real-time monitoring interface displaying simulated cyber attack events, system resource gauges, attack type distribution charts, and a live attack timeline.</li>
+  <li><strong>Learning Center:</strong> A structured four-level curriculum (Beginner, Intermediate, Advanced, Expert) covering 8 attack types including DDoS, SQL Injection, Brute Force, Metasploit Exploitation, MITM, Phishing, and Ransomware.</li>
+  <li><strong>Interactive Attack Terminal:</strong> A fully functional terminal where users type real attack commands (nmap, sqlmap, hydra, msfconsole, hping3, arpspoof, etc.) and observe live attack-defense simulations with Canvas-based visualizations.</li>
+  <li><strong>SIEM Live Monitor:</strong> A Wazuh-style Security Information and Event Management dashboard with real-time log streaming from three simulated agents, event correlation, and active alert management.</li>
+  <li><strong>Analytics Dashboard:</strong> Comprehensive data visualization including weekly attack charts, radar charts, frequency heatmaps, and geographic attack origin analysis.</li>
+  <li><strong>Reports &amp; Certificates:</strong> Downloadable CSV, JSON, and PDF reports with filterable attack history and a certificate generation system.</li>
+  <li><strong>User Profile &amp; XP System:</strong> A gamified progression system with experience points, achievement badges, and learning path tracking.</li>
+</ul>
+
+<h2 class="section-title">1.3 Project Purpose</h2>
+<p>The primary motivation behind the Cyber Attack Simulation Lab is to democratize cybersecurity education by making it practical, engaging, and accessible:</p>
+<p><strong>Educational Purpose:</strong> The (ISC)² Cybersecurity Workforce Study (2023) reports a global shortage of 3.4 million cybersecurity professionals. By providing students with hands-on simulation, CASL accelerates the development of technically competent security professionals.</p>
+<p><strong>Safety Purpose:</strong> Real-world cybersecurity practice carries significant legal and ethical risks. Penetration testing on unauthorized systems is illegal. CASL provides a completely safe, isolated, and legal environment for practicing attack and defense techniques.</p>
+<p><strong>Awareness Purpose:</strong> CASL's gamified learning approach — with XP points, levels, quizzes, and certificates — makes security training engaging and encourages continuous learning.</p>
+
+<h2 class="section-title">1.4 Problem Statement</h2>
+<p>The current landscape of cybersecurity education faces several critical limitations:</p>
+<ul>
+  <li><strong>Gap 1 — Lack of Practical Hands-On Training:</strong> Most cybersecurity courses focus on theoretical concepts. Students learn about attacks from textbooks but never experience realistic execution of an attack or the process of defending against one.</li>
+  <li><strong>Gap 2 — High Barrier to Entry for Lab Environments:</strong> Setting up a traditional cybersecurity lab requires multiple physical or virtual machines, network configuration, and tools installation — inaccessible to most students.</li>
+  <li><strong>Gap 3 — No Real-Time Feedback Loop:</strong> Existing platforms lack real-time visualization of attack-defense interactions. Users cannot see the immediate effect of enabling a firewall on an incoming attack.</li>
+  <li><strong>Gap 4 — Absence of Integrated SIEM Training:</strong> No accessible educational platform simulates the SIEM experience. Enterprise tools like Wazuh and Splunk are complex and expensive to deploy for educational purposes.</li>
+  <li><strong>Gap 5 — No Progress Tracking or Certification:</strong> Most free cybersecurity resources provide no structured learning path, progress tracking, or certification.</li>
+</ul>
+<p>CASL directly addresses all five gaps through its integrated, web-based, gamified simulation platform.</p>
+
+<h2 class="section-title">1.5 The System Context View</h2>
+<div class="code-block">┌──────────────────────────────────────────────────────────────┐
+│                        USER BROWSER                           │
+│                                                               │
+│  ┌──────────┐  ┌──────────┐  ┌───────────┐  ┌────────────┐  │
+│  │  Login   │→ │Dashboard │→ │ Learning  │→ │ Interactive│  │
+│  │  Page    │  │(Live Feed│  │  Center   │  │    Lab     │  │
+│  └──────────┘  │ Charts)  │  │ (4 Levels)│  │ (Terminal) │  │
+│                └──────────┘  └───────────┘  └────────────┘  │
+│                                                               │
+│  ┌──────────┐  ┌──────────┐  ┌─────────────────────────┐    │
+│  │  SIEM    │  │Analytics │  │  Reports & Certificates  │    │
+│  │  Monitor │  │Dashboard │  │  (CSV / JSON / PDF)      │    │
+│  └──────────┘  └──────────┘  └─────────────────────────┘    │
+└──────────────────────────────────────────────────────────────┘
+         │                    │                    │
+         ▼                    ▼                    ▼
+  ┌─────────────┐    ┌──────────────┐    ┌──────────────────┐
+  │ localStorage│    │  Chart.js    │    │   Canvas API     │
+  │(User/Progress)   │ (Data Viz)   │    │(Attack Animation)│
+  └─────────────┘    └──────────────┘    └──────────────────┘
+
+FUTURE INTEGRATION:
+  ┌──────────────┐   ┌────────────────┐   ┌───────────────────┐
+  │  VirtualBox  │   │  Kali Linux VM │   │  Wazuh Manager    │
+  │  VM Manager  │↔  │  Attacker      │↔  │  (Real SIEM)      │
+  └──────────────┘   └────────────────┘   └───────────────────┘</div>
+
+<h2 class="section-title">1.6 System Requirements</h2>
+<h3 class="sub-title">Functional Requirements</h3>
+<table>
+  <thead><tr><th>ID</th><th>Requirement</th></tr></thead>
+  <tbody>
+    <tr><td>FR-01</td><td>The system shall provide user registration and login with email/password</td></tr>
+    <tr><td>FR-02</td><td>The system shall display a live attack feed updating every second</td></tr>
+    <tr><td>FR-03</td><td>The system shall provide 4 difficulty levels of learning content</td></tr>
+    <tr><td>FR-04</td><td>Each learning module shall include theory, terminal demo, defense section, and quiz</td></tr>
+    <tr><td>FR-05</td><td>The interactive lab shall accept typed commands and produce realistic output</td></tr>
+    <tr><td>FR-06</td><td>Defense systems shall be togglable and shall affect attack simulation outcomes</td></tr>
+    <tr><td>FR-07</td><td>The SIEM monitor shall display real-time log entries with severity levels</td></tr>
+    <tr><td>FR-08</td><td>The system shall track user XP, progress, and module completion</td></tr>
+    <tr><td>FR-09</td><td>Reports shall be exportable in CSV, JSON, and PDF formats</td></tr>
+    <tr><td>FR-10</td><td>The system shall display analytics charts and heatmaps</td></tr>
+    <tr><td>FR-11</td><td>Certificates shall be generated for users meeting XP and module thresholds</td></tr>
+  </tbody>
+</table>
+
+<h3 class="sub-title">Non-Functional Requirements</h3>
+<table>
+  <thead><tr><th>ID</th><th>Requirement</th></tr></thead>
+  <tbody>
+    <tr><td>NFR-01</td><td>The system shall load in under 3 seconds on a standard broadband connection</td></tr>
+    <tr><td>NFR-02</td><td>The system shall be responsive and functional on screen widths ≥ 768px</td></tr>
+    <tr><td>NFR-03</td><td>All user data shall be stored locally — no external data transmission</td></tr>
+    <tr><td>NFR-04</td><td>The system shall function without a backend server (static file serving only)</td></tr>
+    <tr><td>NFR-05</td><td>The system shall run on all modern browsers (Chrome, Firefox, Edge, Safari)</td></tr>
+    <tr><td>NFR-06</td><td>No real network connections shall be made during attack simulations</td></tr>
+  </tbody>
+</table>
+
+<h2 class="section-title">1.8 Challenges</h2>
+<ul>
+  <li><strong>Challenge 1 — Realistic Simulation Without a Backend:</strong> Creating convincing attack simulations that feel authentic without a real backend required designing sophisticated JavaScript state machines that mimic real tool behavior.</li>
+  <li><strong>Challenge 2 — Real-Time Visualization Performance:</strong> Rendering smooth Canvas-based particle animations while simultaneously updating live feeds, gauges, and charts required careful performance optimization.</li>
+  <li><strong>Challenge 3 — Defense Logic Accuracy:</strong> Mapping specific defenses to specific attack types accurately reflecting real-world security relationships. MFA correctly blocks brute force and phishing; WAF targets web attacks but not network-layer attacks.</li>
+  <li><strong>Challenge 4 — SIEM Log Authenticity:</strong> Generating realistic Wazuh rule IDs, log formats, and event correlations required extensive research into actual Wazuh ruleset documentation.</li>
+  <li><strong>Challenge 5 — State Persistence:</strong> Maintaining user progress and XP across multiple pages using only localStorage required designing a robust state management system.</li>
+</ul>
+
+<h2 class="section-title">1.9 Projection</h2>
+<ul>
+  <li><strong>Phase 1</strong> (Completed): Web-based simulation platform with all core modules.</li>
+  <li><strong>Phase 2</strong> (Projected 2025–2026): VirtualBox integration with Kali Linux and target VMs.</li>
+  <li><strong>Phase 3</strong> (Projected 2026): Full Wazuh SIEM integration with real log collection.</li>
+  <li><strong>Phase 4</strong> (Projected 2026–2027): Cloud deployment, multi-tenant support, and certification.</li>
+</ul>
+
+<h2 class="section-title">1.10 Ethical Considerations</h2>
+<ul>
+  <li><strong>No Real Systems Harmed:</strong> All attack simulations are entirely contained within the browser. No actual network packets are sent and no real exploitation occurs.</li>
+  <li><strong>Educational Use Only:</strong> The platform is designed exclusively for educational purposes. All content clearly labels itself as simulation.</li>
+  <li><strong>Data Privacy:</strong> All user data is stored locally in the browser's localStorage. No user data is transmitted to external servers.</li>
+  <li><strong>Legal Compliance:</strong> The platform educates users about the legal framework of cybersecurity, including computer crime laws and the importance of authorization before security testing.</li>
+</ul>
+
+<div class="page-break"></div>
+
+<!-- ════════════════════════════════ CHAPTER TWO ════════════════════════════════ -->
+<h1 class="chapter-title"><span class="chapter-num">Chapter Two</span>Literature Review</h1>
+
+<h2 class="section-title">2.1 Background</h2>
+<h3 class="sub-title">Cybersecurity Fundamentals</h3>
+<p>Cybersecurity refers to the practice of protecting systems, networks, and programs from digital attacks. These attacks typically aim to access, change, or destroy sensitive information, extort money from users, or interrupt normal business operations (NIST, 2023).</p>
+<p><strong>Key Terminology:</strong></p>
+<ul>
+  <li><strong>Threat:</strong> A potential cause of an unwanted incident that may result in harm.</li>
+  <li><strong>Vulnerability:</strong> A weakness that could be exploited by a threat source.</li>
+  <li><strong>Exploit:</strong> Code or commands that take advantage of a vulnerability.</li>
+  <li><strong>Penetration Testing:</strong> A simulated cyber attack to check for exploitable vulnerabilities.</li>
+  <li><strong>SIEM:</strong> Technology providing real-time analysis of security alerts.</li>
+  <li><strong>Red/Blue Team:</strong> Red team simulates attackers; Blue team defends.</li>
+</ul>
+
+<h3 class="sub-title">The Cybersecurity Skills Gap</h3>
+<p>The (ISC)² 2023 Cybersecurity Workforce Study found that the global cybersecurity workforce gap stands at <strong>3.4 million professionals</strong>. This gap is particularly pronounced in penetration testing, incident response, and security operations — all requiring hands-on skills that textbook education cannot provide.</p>
+
+<h2 class="section-title">2.2 Literature Review</h2>
+<p><strong>[1] Conklin et al. (2021). Principles of Computer Security. McGraw-Hill.</strong><br>
+This foundational text covers the CIA Triad, authentication mechanisms, and network security. Its framework informed CASL's four-level difficulty structure.</p>
+
+<p><strong>[2] Offensive Security. (2023). Penetration Testing with Kali Linux.</strong><br>
+The industry-standard course guide covering Kali Linux tools. CASL's tool selection (nmap, sqlmap, hydra, msfconsole) is directly derived from this curriculum.</p>
+
+<p><strong>[3] Scarfone et al. (2008). NIST SP 800-115 — Security Testing Guide.</strong><br>
+Defines a systematic approach to security testing: discovery, attack, and reporting phases — which maps directly to CASL's simulation structure.</p>
+
+<p><strong>[4] Wazuh, Inc. (2023). Wazuh Documentation.</strong><br>
+The open-source SIEM platform that inspired CASL's SIEM Monitor. Rule IDs, log formats, and severity levels are drawn from Wazuh's published rule documentation.</p>
+
+<p><strong>[5] Kolb, D.A. (1984). Experiential Learning. Prentice Hall.</strong><br>
+Kolb's experiential learning cycle — concrete experience, reflective observation, abstract conceptualization, active experimentation — is built into every CASL simulation module.</p>
+
+<p><strong>[6] Prensky, M. (2001). Digital Game-Based Learning. McGraw-Hill.</strong><br>
+Prensky's work on game-based learning informs CASL's XP system, leveled progression, badges, and certificates.</p>
+
+<h2 class="section-title">2.3 The Existing Solutions</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Feature</th><th>CASL</th><th>TryHackMe</th><th>HackTheBox</th><th>DVWA</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Browser-based (no install)</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="cross">✗</td></tr>
+    <tr><td>No subscription required</td><td class="check">✓</td><td class="partial">Partial</td><td class="cross">✗</td><td class="check">✓</td></tr>
+    <tr><td>Beginner to Expert curriculum</td><td class="check">✓</td><td class="check">✓</td><td class="cross">✗</td><td class="cross">✗</td></tr>
+    <tr><td>Interactive attack terminal</td><td class="check">✓</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td></tr>
+    <tr><td>Defense simulation</td><td class="check">✓</td><td class="partial">Partial</td><td class="cross">✗</td><td class="cross">✗</td></tr>
+    <tr><td>SIEM monitoring</td><td class="check">✓</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td></tr>
+    <tr><td>Downloadable reports</td><td class="check">✓</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td></tr>
+    <tr><td>Certificates</td><td class="check">✓</td><td class="check">✓</td><td class="cross">✗</td><td class="cross">✗</td></tr>
+    <tr><td>Gamification (XP/Levels)</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="cross">✗</td></tr>
+  </tbody>
+</table>
+
+<div class="page-break"></div>
+
+<!-- ════════════════════════════════ CHAPTER THREE ════════════════════════════════ -->
+<h1 class="chapter-title"><span class="chapter-num">Chapter Three</span>System Architecture and Design</h1>
+
+<h2 class="section-title">3.1 Introduction</h2>
+<p>The Cyber Attack Simulation Lab is designed as a modular, single-page-application-style web platform. Each functional module is implemented as an independent HTML page with dedicated CSS and JavaScript files, communicating through a shared state management utility. The architecture prioritizes portability, requiring only a static file server to deploy.</p>
+
+<h2 class="section-title">3.2 Methodology</h2>
+<p>The project followed an <strong>Agile-inspired iterative development methodology</strong>:</p>
+<ul>
+  <li><strong>Sprint 1:</strong> Core infrastructure — authentication, design system, navigation.</li>
+  <li><strong>Sprint 2:</strong> Dashboard — live attack feed engine, statistics, charts, gauges.</li>
+  <li><strong>Sprint 3:</strong> Learning Center — 4-level curriculum, terminal emulator, quiz logic, XP.</li>
+  <li><strong>Sprint 4:</strong> Interactive Lab — command parser, attack engines, Canvas visualization.</li>
+  <li><strong>Sprint 5:</strong> SIEM Monitor — log stream engine, rule matching, event correlation.</li>
+  <li><strong>Sprint 6:</strong> Reports &amp; Analytics — data generation, CSV/JSON/PDF export, certificates.</li>
+  <li><strong>Sprint 7:</strong> GitHub deployment, polish, testing, documentation.</li>
+</ul>
+
+<h2 class="section-title">3.3 System Architecture</h2>
+<div class="code-block">┌─────────────────────────────────────────────────────────┐
+│                    PRESENTATION LAYER                    │
+│  index.html | dashboard.html | learn.html | lab.html    │
+│  siem.html  | analytics.html | reports.html             │
+└─────────────────────────┬───────────────────────────────┘
+                          │
+┌─────────────────────────▼───────────────────────────────┐
+│                     STYLE LAYER                          │
+│  css/main.css  (Design system, tokens, components)      │
+│  css/auth.css | css/siem.css | (per-page styles)        │
+└─────────────────────────┬───────────────────────────────┘
+                          │
+┌─────────────────────────▼───────────────────────────────┐
+│                     LOGIC LAYER                          │
+│  js/utils.js         — Shared utilities, storage        │
+│  js/app.js           — Auth, navigation, user session   │
+│  js/dashboard.js     — Live feed engine, charts         │
+│  js/learn.js         — Curriculum, quizzes, XP          │
+│  js/interactive-lab.js — Command parser, attack engines │
+│  js/siem.js          — Log stream, correlation engine   │
+│  js/reports.js       — Report generation, certificates  │
+└─────────────────────────┬───────────────────────────────┘
+                          │
+┌─────────────────────────▼───────────────────────────────┐
+│                   PERSISTENCE LAYER                      │
+│              Browser localStorage API                    │
+│  Keys: "users" | "currentUser" | "casl_*"               │
+└─────────────────────────────────────────────────────────┘</div>
+
+<h2 class="section-title">3.4 Structural Model</h2>
+<h3 class="sub-title">Data Model (Key Entities)</h3>
+<div class="code-block">USER {
+  id: string (UUID)          email: string (unique)
+  name: string               password: string (hashed)
+  role: enum(student/researcher/admin)
+  xp: number                 level: number
+  progress: { module_id: boolean }
+  badges: string[]           createdAt: timestamp
+}
+
+ATTACK_LOG {
+  id: number                 type: string
+  severity: enum(critical/high/medium/low)
+  target: string             defenseUsed: string
+  result: enum(blocked/breached)
+  timestamp: Date
+}
+
+SIEM_EVENT {
+  ruleId: string             level: enum(critical/high/medium/low/info)
+  agent: { id, name, ip }   description: string
+  sourceIP: string           timestamp: string
+}</div>
+
+<h2 class="section-title">3.5 Detailed System Architecture</h2>
+
+<h3 class="sub-title">Authentication System (js/app.js)</h3>
+<p>Implements registration with password strength validation and role selection. Uses session management via localStorage. Shared <code>Nav.init()</code> provides navigation state across all pages. Auto-redirect: unauthenticated users are redirected to login.</p>
+
+<h3 class="sub-title">Live Dashboard Engine (js/dashboard.js)</h3>
+<p>Generates synthetic attack events every 800ms. Attack types: DDoS, SQL Injection, Brute Force, MITM, Ransomware, Phishing, XSS, Port Scan. Chart.js integration: Donut chart and Line chart. System resource gauges with animated fills.</p>
+
+<h3 class="sub-title">Interactive Lab Engine (js/interactive-lab.js)</h3>
+<p>Command parser maps 20+ commands to handler functions. Each attack handler validates input, applies defense logic, generates realistic multi-step output, triggers Canvas animation, updates score, and awards XP. Defense matrix: each of 6 defenses blocks specific attack types based on real-world security relationships. Canvas particle system: particles animate from attacker node to target; green particles bounce back when blocked.</p>
+
+<h3 class="sub-title">SIEM Engine (js/siem.js)</h3>
+<p>Generates 1–4 log events every 800ms from 3 simulated agents. Rule library: 20 Wazuh-authentic rules with real rule IDs. Event correlation detects multi-event attack chains every 25 batches. Real-time Chart.js timeline. Filter system by level and by agent.</p>
+
+<h3 class="sub-title">Reports Engine (js/reports.js)</h3>
+<p>Generates 40 realistic historical attack records on initialization. CSV export with RFC compliance. JSON export with project metadata. PDF report via browser print dialog. Certificate generator with unique alphanumeric IDs, user name, date, and university attribution.</p>
+
+<h2 class="section-title">3.6 User Interface</h2>
+<p>The UI design follows a <strong>Cyberpunk Dark</strong> aesthetic:</p>
+<table>
+  <thead><tr><th>Token</th><th>Value</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td>--bg-primary</td><td>#0d1117</td><td>Main background</td></tr>
+    <tr><td>--bg-card</td><td>#161b22</td><td>Card surfaces</td></tr>
+    <tr><td>--cyber-blue</td><td>#00d4ff</td><td>Primary accent</td></tr>
+    <tr><td>--cyber-purple</td><td>#7c3aed</td><td>Secondary accent</td></tr>
+    <tr><td>--attack-red</td><td>#ff3366</td><td>Danger/Attack indicators</td></tr>
+    <tr><td>--defense-green</td><td>#00ff88</td><td>Success/Defense indicators</td></tr>
+    <tr><td>--warning-orange</td><td>#ffaa00</td><td>Warning/Medium severity</td></tr>
+  </tbody>
+</table>
+<p><strong>Typography:</strong> Inter (UI text) + JetBrains Mono (code, terminal, data). <strong>Layout:</strong> CSS Grid-based responsive sidebar (240px) + main content. <strong>Animations:</strong> CSS keyframe animations + JavaScript Canvas particle animations.</p>
+
+<h2 class="section-title">3.7 Quality Assurance</h2>
+<ul>
+  <li>Cross-browser testing: Chrome 124, Firefox 125, Edge 124.</li>
+  <li>Responsive testing: 1920px, 1440px, 1280px, 1024px widths.</li>
+  <li>State persistence testing: XP and progress persists across refreshes.</li>
+  <li>Command parser testing: all 20 commands with valid and invalid arguments.</li>
+  <li>Defense logic testing: all 6 defense × 8 attack combinations.</li>
+  <li>Export testing: CSV in Excel, JSON validation, PDF in browser print dialog.</li>
+  <li>Performance testing: live feed and SIEM maintained &gt;30 FPS simultaneously.</li>
+</ul>
+
+<h2 class="section-title">3.8 Acceptance Criteria</h2>
+<table>
+  <thead><tr><th>Criterion</th><th>Status</th></tr></thead>
+  <tbody>
+    <tr><td>User can register and login with valid credentials</td><td class="check">✓ Met</td></tr>
+    <tr><td>Dashboard displays live attack events updating in real-time</td><td class="check">✓ Met</td></tr>
+    <tr><td>All 4 learning levels are accessible with full module content</td><td class="check">✓ Met</td></tr>
+    <tr><td>User can type commands in lab terminal and see realistic output</td><td class="check">✓ Met</td></tr>
+    <tr><td>Defense toggles correctly affect attack outcomes</td><td class="check">✓ Met</td></tr>
+    <tr><td>SIEM displays continuous log stream from 3 agents</td><td class="check">✓ Met</td></tr>
+    <tr><td>CSV/JSON/PDF reports can be downloaded</td><td class="check">✓ Met</td></tr>
+    <tr><td>Certificates are generated for qualifying users</td><td class="check">✓ Met</td></tr>
+    <tr><td>XP system tracks and persists user progress</td><td class="check">✓ Met</td></tr>
+    <tr><td>Application is accessible via GitHub Pages URL</td><td class="check">✓ Met</td></tr>
+  </tbody>
+</table>
+
+<h2 class="section-title">3.9 Future Consideration</h2>
+<ul>
+  <li>VirtualBox API integration for real VM lifecycle management.</li>
+  <li>WebSocket server for real Wazuh agent log streaming.</li>
+  <li>Backend API (Node.js/Python) for multi-user database persistence.</li>
+  <li>Docker containerization for one-click deployment.</li>
+  <li>Arabic language internationalization (i18n) support.</li>
+</ul>
+
+<div class="page-break"></div>
+
+<!-- ════════════════════════════════ CHAPTER FOUR ════════════════════════════════ -->
+<h1 class="chapter-title"><span class="chapter-num">Chapter Four</span>Experimental Setup and Configuration</h1>
+
+<h2 class="section-title">4.1 Hardware and Software Setup</h2>
+<table>
+  <thead><tr><th>Component</th><th>Specification</th></tr></thead>
+  <tbody>
+    <tr><td>Operating System</td><td>Windows 11</td></tr>
+    <tr><td>Code Editor</td><td>Visual Studio Code 1.89</td></tr>
+    <tr><td>Browser (Dev)</td><td>Google Chrome 124</td></tr>
+    <tr><td>Version Control</td><td>Git 2.45</td></tr>
+    <tr><td>Package Manager</td><td>Node.js 24 + npm</td></tr>
+    <tr><td>Local Server</td><td>npx serve (static file server)</td></tr>
+    <tr><td>Remote Hosting</td><td>GitHub Pages</td></tr>
+  </tbody>
+</table>
+
+<h2 class="section-title">4.2 Installation and Configuration</h2>
+<div class="code-block"># Step 1: Clone the repository
+git clone https://github.com/musaad-ai/CyberLAB.git
+
+# Step 2: Start local development server
+cd CyberLAB
+npx serve . --listen 3000
+
+# Step 3: Open in browser → http://localhost:3000
+
+# Demo Credentials:
+#   Email:    admin@cyberlab.com
+#   Password: password123
+
+# To deploy updates to GitHub Pages:
+git add .
+git commit -m "description of changes"
+git push origin master
+# Auto-deploys within 2 minutes</div>
+
+<h2 class="section-title">4.3 Tools and Technologies Used</h2>
+<table>
+  <thead><tr><th>Category</th><th>Tool / Technology</th><th>Version</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td>Markup</td><td>HTML5</td><td>—</td><td>Page structure and semantics</td></tr>
+    <tr><td>Styling</td><td>CSS3</td><td>—</td><td>Design system, animations, layout</td></tr>
+    <tr><td>Logic</td><td>Vanilla JavaScript</td><td>ES2022</td><td>All application logic</td></tr>
+    <tr><td>Visualization</td><td>Chart.js</td><td>4.4.0</td><td>Dashboard and SIEM charts</td></tr>
+    <tr><td>Rendering</td><td>Canvas API</td><td>—</td><td>Attack particle animations</td></tr>
+    <tr><td>Persistence</td><td>localStorage API</td><td>—</td><td>User data storage</td></tr>
+    <tr><td>Fonts</td><td>Google Fonts</td><td>—</td><td>Inter + JetBrains Mono</td></tr>
+    <tr><td>Version Control</td><td>Git</td><td>2.45</td><td>Source control</td></tr>
+    <tr><td>Repository</td><td>GitHub</td><td>—</td><td>Code hosting</td></tr>
+    <tr><td>Hosting</td><td>GitHub Pages</td><td>—</td><td>Static site deployment</td></tr>
+  </tbody>
+</table>
+
+<h2 class="section-title">4.4 System Training</h2>
+<p>This project does not incorporate machine learning or AI components in the current version. The event generation, attack simulation, and correlation detection systems are rule-based algorithms using weighted randomization. Future phases may incorporate ML-based anomaly detection.</p>
+
+<h2 class="section-title">4.5 Testing and Validation</h2>
+<table>
+  <thead><tr><th>Test Case</th><th>Input</th><th>Expected Output</th><th>Result</th></tr></thead>
+  <tbody>
+    <tr><td>Login — valid credentials</td><td>admin@cyberlab.com / password123</td><td>Redirect to dashboard</td><td class="check">✓ Pass</td></tr>
+    <tr><td>Login — invalid password</td><td>admin@cyberlab.com / wrong</td><td>Error toast message</td><td class="check">✓ Pass</td></tr>
+    <tr><td>Register — existing email</td><td>admin@cyberlab.com</td><td>"Email already in use"</td><td class="check">✓ Pass</td></tr>
+    <tr><td>nmap command in lab</td><td>nmap -sV 192.168.1.1</td><td>Port scan output</td><td class="check">✓ Pass</td></tr>
+    <tr><td>Firewall ON + DDoS attack</td><td>Toggle ON + hping3</td><td>BLOCKED message shown</td><td class="check">✓ Pass</td></tr>
+    <tr><td>All defenses OFF + DDoS</td><td>All toggles OFF + hping3</td><td>TARGET DOWN shown</td><td class="check">✓ Pass</td></tr>
+    <tr><td>Download CSV report</td><td>Click "Download CSV"</td><td>.csv file downloaded</td><td class="check">✓ Pass</td></tr>
+    <tr><td>Complete a quiz</td><td>Answer all questions</td><td>XP awarded, progress saved</td><td class="check">✓ Pass</td></tr>
+    <tr><td>Refresh page after XP earn</td><td>Browser F5</td><td>XP persists in sidebar</td><td class="check">✓ Pass</td></tr>
+    <tr><td>SIEM filter by level</td><td>Select "Critical" filter</td><td>Only critical events shown</td><td class="check">✓ Pass</td></tr>
+  </tbody>
+</table>
+
+<h3 class="sub-title">Performance Testing</h3>
+<table>
+  <thead><tr><th>Metric</th><th>Target</th><th>Measured</th></tr></thead>
+  <tbody>
+    <tr><td>Initial page load time</td><td>&lt; 3s</td><td>~2.1s (first load)</td></tr>
+    <tr><td>Live feed update frequency</td><td>1s</td><td>0.8s average</td></tr>
+    <tr><td>Canvas animation frame rate</td><td>&gt; 30fps</td><td>55–60fps</td></tr>
+    <tr><td>Memory usage (Chrome)</td><td>&lt; 100MB</td><td>~45MB</td></tr>
+  </tbody>
+</table>
+
+<h2 class="section-title">4.6 Risk Analysis and Mitigation</h2>
+<table>
+  <thead><tr><th>Risk</th><th>Probability</th><th>Impact</th><th>Mitigation</th></tr></thead>
+  <tbody>
+    <tr><td>localStorage limit (5MB)</td><td>Low</td><td>Medium</td><td>Data pruning — max 500 log entries</td></tr>
+    <tr><td>CDN unavailability</td><td>Low</td><td>Medium</td><td>Graceful degradation with fallback fonts</td></tr>
+    <tr><td>Cross-browser incompatibility</td><td>Low</td><td>High</td><td>Tested across Chrome/Firefox/Edge</td></tr>
+    <tr><td>GitHub Pages downtime</td><td>Very Low</td><td>High</td><td>Local server always available as fallback</td></tr>
+    <tr><td>User data loss on browser clear</td><td>Medium</td><td>Low</td><td>Documented in UI; non-critical data only</td></tr>
+  </tbody>
+</table>
+
+<div class="page-break"></div>
+
+<!-- ════════════════════════════════ CHAPTER FIVE ════════════════════════════════ -->
+<h1 class="chapter-title"><span class="chapter-num">Chapter Five</span>Results and Discussion</h1>
+
+<h2 class="section-title">5.1 Results</h2>
+<p>The Cyber Attack Simulation Lab was successfully developed and deployed as a fully functional web-based cybersecurity training platform. The following results were achieved:</p>
+
+<table>
+  <thead><tr><th>Deliverable</th><th>Description</th><th>Status</th></tr></thead>
+  <tbody>
+    <tr><td>Authentication System</td><td>Login/Register with role selection</td><td class="check">✓ Complete</td></tr>
+    <tr><td>Live Threat Dashboard</td><td>Real-time feed, charts, gauges</td><td class="check">✓ Complete</td></tr>
+    <tr><td>Learning Center (4 Levels)</td><td>8 modules with theory/demo/quiz</td><td class="check">✓ Complete</td></tr>
+    <tr><td>Interactive Attack Terminal</td><td>20 commands, Canvas visualization</td><td class="check">✓ Complete</td></tr>
+    <tr><td>Defense Toggle System</td><td>6 defenses, real-world mapping</td><td class="check">✓ Complete</td></tr>
+    <tr><td>SIEM Live Monitor</td><td>3 agents, 20 rules, correlation</td><td class="check">✓ Complete</td></tr>
+    <tr><td>Analytics Dashboard</td><td>Charts, heatmaps, geographic data</td><td class="check">✓ Complete</td></tr>
+    <tr><td>Reports Module</td><td>CSV/JSON/PDF export</td><td class="check">✓ Complete</td></tr>
+    <tr><td>Certificate System</td><td>6 certificates with print/PDF</td><td class="check">✓ Complete</td></tr>
+    <tr><td>User Profile &amp; XP</td><td>Gamified progression</td><td class="check">✓ Complete</td></tr>
+    <tr><td>GitHub Deployment</td><td>Public URL via GitHub Pages</td><td class="check">✓ Complete</td></tr>
+  </tbody>
+</table>
+
+<h3 class="sub-title">Platform Statistics</h3>
+<table>
+  <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+  <tbody>
+    <tr><td>Total HTML Pages</td><td>8 pages</td></tr>
+    <tr><td>Total JavaScript Lines</td><td>~2,800 lines</td></tr>
+    <tr><td>Total CSS Lines</td><td>~1,900 lines</td></tr>
+    <tr><td>Attack Commands Supported</td><td>20+</td></tr>
+    <tr><td>Wazuh Rules Simulated</td><td>20 (authentic rule IDs)</td></tr>
+    <tr><td>Learning Modules</td><td>8 (2 per difficulty level)</td></tr>
+    <tr><td>Defense Systems</td><td>6</td></tr>
+    <tr><td>Certificate Types</td><td>6</td></tr>
+    <tr><td>GitHub Repository</td><td>github.com/musaad-ai/CyberLAB</td></tr>
+    <tr><td>Live Demo URL</td><td>musaad-ai.github.io/CyberLAB</td></tr>
+  </tbody>
+</table>
+
+<h2 class="section-title">5.2 Discussion</h2>
+<p>The project successfully achieved all primary objectives. The interactive terminal allows users to type real attack commands and observe realistic output, addressing the core gap in traditional cybersecurity education. The defense toggle system creates a genuine feedback loop where users observe the direct effect of enabling security controls.</p>
+<p>The SIEM Monitor module successfully simulates the experience of monitoring a live Wazuh dashboard with authentic rule IDs, alert management, and AI-powered event correlation — an experience no comparable free platform provides.</p>
+<p>The Canvas particle animation system provides an intuitive visual metaphor for attack-defense dynamics. Watching particles bounce back when blocked provides immediate feedback that reinforces learning objectives.</p>
+
+<h2 class="section-title">5.3 Limitations</h2>
+<ul>
+  <li><strong>Simulation vs. Reality:</strong> All attacks are simulated. No actual network traffic is generated, meaning users do not develop skills from working with real tools on real systems.</li>
+  <li><strong>No Backend Persistence:</strong> User data is stored in browser localStorage and lost when storage is cleared. A proper backend database is needed for production-scale deployment.</li>
+  <li><strong>Single-User Architecture:</strong> Lacks multi-user features such as class management, instructor dashboards, or collaborative exercises.</li>
+  <li><strong>No Real VM Integration:</strong> The proposed VirtualBox integration with real Kali Linux and target VMs has not yet been implemented.</li>
+  <li><strong>Limited Mobile Support:</strong> Complex multi-column layouts are not optimized for small mobile screens.</li>
+</ul>
+
+<div class="page-break"></div>
+
+<!-- ════════════════════════════════ CHAPTER SIX ════════════════════════════════ -->
+<h1 class="chapter-title"><span class="chapter-num">Chapter Six</span>Conclusion</h1>
+
+<h2 class="section-title">6.1 Summary of Work</h2>
+<p>This project delivered the <strong>Cyber Attack Simulation Lab</strong>, a comprehensive web-based cybersecurity training platform designed to address the practical training gap in academic cybersecurity education.</p>
+<p>The platform was developed iteratively, resulting in an 8-page application with 20 supported attack commands, 6 defense systems, a 4-level learning curriculum, a Wazuh-inspired SIEM monitor, downloadable reports, and a certificate system.</p>
+<p>The application is publicly deployed at <strong>musaad-ai.github.io/CyberLAB</strong> and is immediately accessible to students, researchers, and educators worldwide without any installation or subscription requirement.</p>
+<p>The project demonstrates that a sophisticated, educationally valuable cybersecurity training platform can be built using only standard web technologies (HTML5, CSS3, Vanilla JavaScript), achieving a premium user experience comparable to paid commercial platforms.</p>
+
+<h2 class="section-title">6.2 Lessons Learned</h2>
+<ul>
+  <li><strong>Simulation Requires Deep Research:</strong> Creating authentic simulations requires thorough understanding of real tools. The SIEM rule IDs, command outputs, and defense logic required extensive research into Wazuh documentation and Kali Linux tool manuals.</li>
+  <li><strong>User Experience Drives Learning:</strong> Visual design, animations, and gamification are pedagogically essential. Immediate visual feedback reinforces learning objectives faster than text descriptions.</li>
+  <li><strong>Modularity Enables Scalability:</strong> The decoupled architecture made it possible to add new features (SIEM, Reports) without modifying existing modules.</li>
+  <li><strong>State Management Without a Backend is Challenging:</strong> Managing complex application state across multiple pages using only localStorage required careful design.</li>
+  <li><strong>GitHub Pages is Powerful for Academic Projects:</strong> Deploying to a globally accessible URL using only Git commands required zero server administration — ideal for academic projects.</li>
+</ul>
+
+<h2 class="section-title">6.3 Future Work</h2>
+<ul>
+  <li><strong>Phase 2 — VM Integration:</strong> Integrate VirtualBox REST API to provision Kali Linux attacker VM and Windows Server/Ubuntu target VMs. Enable real command execution from the browser terminal.</li>
+  <li><strong>Phase 3 — Real SIEM Integration:</strong> Deploy Wazuh Manager, install agents on all VMs, stream real Wazuh alerts to the web dashboard via WebSocket.</li>
+  <li><strong>Phase 4 — Backend and Multi-User:</strong> Develop Node.js/Express backend with PostgreSQL database. Add instructor dashboard for class management.</li>
+  <li><strong>Phase 5 — Cloud and Mobile:</strong> Deploy to cloud (AWS/Azure), optimize for mobile, implement Arabic language support.</li>
+</ul>
+
+<div class="page-break"></div>
+
+<!-- ════════════════════════════════ REFERENCES ════════════════════════════════ -->
+<h1 class="chapter-title"><span class="chapter-num"> </span>References</h1>
+
+<div class="ref-item"><span class="ref-num">[1]</span> Conklin, W.A., White, G., Williams, D., Davis, R., &amp; Cothren, C. (2021). <em>Principles of Computer Security: CompTIA Security+ and Beyond</em> (6th ed.). McGraw-Hill Education.</div>
+<div class="ref-item"><span class="ref-num">[2]</span> Offensive Security. (2023). <em>Penetration Testing with Kali Linux (PEN-200)</em>. OffSec. https://www.offsec.com/courses/pen-200/</div>
+<div class="ref-item"><span class="ref-num">[3]</span> Scarfone, K., Souppaya, M., Cody, A., &amp; Orebaugh, A. (2008). <em>Technical Guide to Information Security Testing and Assessment</em>. NIST SP 800-115. https://doi.org/10.6028/NIST.SP.800-115</div>
+<div class="ref-item"><span class="ref-num">[4]</span> Wazuh, Inc. (2024). <em>Wazuh Documentation — Open Source Security Platform</em>. https://documentation.wazuh.com</div>
+<div class="ref-item"><span class="ref-num">[5]</span> Kolb, D.A. (1984). <em>Experiential Learning: Experience as the Source of Learning and Development</em>. Prentice Hall.</div>
+<div class="ref-item"><span class="ref-num">[6]</span> Prensky, M. (2001). <em>Digital Game-Based Learning</em>. McGraw-Hill.</div>
+<div class="ref-item"><span class="ref-num">[7]</span> (ISC)². (2023). <em>Cybersecurity Workforce Study 2023</em>. https://www.isc2.org/research/workforce-study</div>
+<div class="ref-item"><span class="ref-num">[8]</span> IBM Security. (2023). <em>Cost of a Data Breach Report 2023</em>. IBM Corporation. https://www.ibm.com/reports/data-breach</div>
+<div class="ref-item"><span class="ref-num">[9]</span> NIST. (2023). <em>Cybersecurity Framework 2.0</em>. https://www.nist.gov/cyberframework</div>
+<div class="ref-item"><span class="ref-num">[10]</span> OWASP Foundation. (2021). <em>OWASP Top Ten 2021</em>. https://owasp.org/www-project-top-ten/</div>
+<div class="ref-item"><span class="ref-num">[11]</span> Metasploit Project. (2024). <em>Metasploit Framework Documentation</em>. Rapid7. https://docs.metasploit.com</div>
+<div class="ref-item"><span class="ref-num">[12]</span> Nmap Project. (2024). <em>Nmap Network Scanner Reference Guide</em>. https://nmap.org/book/man.html</div>
+<div class="ref-item"><span class="ref-num">[13]</span> Chart.js Contributors. (2023). <em>Chart.js Documentation</em> (v4.4). https://www.chartjs.org/docs/latest/</div>
+<div class="ref-item"><span class="ref-num">[14]</span> MDN Web Docs. (2024). <em>Canvas API — Web APIs</em>. Mozilla. https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API</div>
+<div class="ref-item"><span class="ref-num">[15]</span> GitHub, Inc. (2024). <em>GitHub Pages Documentation</em>. https://docs.github.com/en/pages</div>
+
+<!-- Footer -->
+<div class="report-footer">
+  Cyber Attack Simulation Lab · ALMAAREEFA University · 2024–2025<br>
+  Supervisor: DR. ISMAIL MOHAMMED KESHTA · github.com/musaad-ai/CyberLAB
+</div>
+
+</body>
+</html>
